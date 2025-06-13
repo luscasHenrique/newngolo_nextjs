@@ -1,5 +1,7 @@
-// import Link from "next/link";
+"use client";
 
+import { ProductCard } from "../_components/productCard/ProductCard";
+import { mockProducts } from "../_components/productCard/mock";
 import { CardLink } from "./_components/cardLink/CardLink";
 import { cardLinks } from "./_components/cardLink/data/cardLinks";
 import { VideoBanner } from "./_components/videoBanner/VideoBanner";
@@ -25,6 +27,11 @@ export default function Home() {
           buttonHref={videoBanner.buttonHref}
           videoSrc={videoBanner.videoSrc}
         />
+      </div>
+      <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 max-w-7xl mx-auto px-4 py-8">
+        {mockProducts.map((product) => (
+          <ProductCard key={product.id} {...product} />
+        ))}
       </div>
     </>
   );
