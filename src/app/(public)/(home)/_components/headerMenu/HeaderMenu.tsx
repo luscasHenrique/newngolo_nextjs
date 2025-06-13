@@ -42,32 +42,35 @@ export function HeaderMenu() {
         {/* Centro - Menu Desktop centralizado absoluto */}
         <nav className="hidden md:flex absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 space-x-6 z-10">
           {mainHeaderMenu.map((item, index) => (
-            <div key={index} className="relative group">
-              {item.href ? (
-                <Link
-                  href={item.href}
-                  className="text-sm font-medium text-gray-700 hover:text-black"
-                >
-                  {item.label}
-                </Link>
-              ) : (
-                <span className="text-sm font-medium text-gray-700 cursor-default">
-                  {item.label}
-                </span>
-              )}
-              {item.submenu && (
-                <div className="absolute left-0 mt-2 bg-white shadow-md rounded-md w-48 opacity-0 group-hover:opacity-100 transition-opacity z-50">
-                  {item.submenu.map((sub, subIndex) => (
-                    <Link
-                      key={subIndex}
-                      href={sub.href}
-                      className="block px-4 py-2 text-sm text-gray-600 hover:bg-gray-100"
-                    >
-                      {sub.label}
-                    </Link>
-                  ))}
-                </div>
-              )}
+            <div key={index} className="relative">
+              <div className="group inline-block">
+                {item.href ? (
+                  <Link
+                    href={item.href}
+                    className="text-sm font-medium text-gray-700 hover:text-black px-2 py-1 inline-block"
+                  >
+                    {item.label}
+                  </Link>
+                ) : (
+                  <span className="text-sm font-medium text-gray-700 cursor-default px-2 py-1 inline-block">
+                    {item.label}
+                  </span>
+                )}
+
+                {item.submenu && (
+                  <div className="absolute left-0 mt-2 bg-white shadow-md rounded-md w-48 opacity-0 invisible group-hover:visible group-hover:opacity-100 transition-all z-50">
+                    {item.submenu.map((sub, subIndex) => (
+                      <Link
+                        key={subIndex}
+                        href={sub.href}
+                        className="block px-4 py-2 text-sm text-gray-600 hover:bg-gray-100 rounded-md"
+                      >
+                        {sub.label}
+                      </Link>
+                    ))}
+                  </div>
+                )}
+              </div>
             </div>
           ))}
         </nav>

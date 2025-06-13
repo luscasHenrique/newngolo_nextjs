@@ -42,6 +42,16 @@ export const mainHeaderMenu: MenuItem[] = [
   {
     icon: BarChart,
     label: "Income",
+    submenu: [
+      {
+        label: "Income 1",
+        href: "/income-1",
+      },
+      {
+        label: "Income 2",
+        href: "/income-2",
+      },
+    ],
   },
   {
     icon: LockKeyhole,
