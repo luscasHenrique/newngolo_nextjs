@@ -1,3 +1,5 @@
+// types/product.ts
+
 export type ProductTagType = "oferta" | "frete" | "novidade";
 
 export interface Product {
@@ -7,7 +9,7 @@ export interface Product {
   tagType?: ProductTagType;
   name: string;
   description: string;
-  rating?: number; // 0 a 5
-  price: string;
-  originalPrice?: string;
+  rating?: number; // Avaliação de 0 a 5, agora opcional
+  price: string; // Preço final, já formatado
+  originalPrice?: string; // Preço original para exibição de desconto
 }
