@@ -7,17 +7,20 @@ import { ChevronDown, ChevronLeft, ChevronRight } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useCurrentUser } from "@/hooks/useCurrentUser";
+import { canAccess } from "@/lib/accessControl";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { authClient } from "@/lib/auth-client";
 import { footerMenu, mainMenu } from "./menuData/menu";
 import { useNavMenu } from "./useNavMenu";
 import { notify } from "@/lib/notify";
+import { Role } from "@/types/model/User";
 
 export function NavMenu() {
   const pathname = usePathname();
   const router = useRouter();
   const { user, loading } = useCurrentUser();
+  const role = user?.role as Role | undefined;
   const {
     isCollapsed,
     setIsCollapsed,
@@ -113,119 +116,130 @@ export function NavMenu() {
           {!isCollapsed && (
             <p className="px-4 pt-2 pb-1 text-xs text-gray-400">MAIN</p>
           )}
-          {mainMenu.map(({ icon: Icon, label, href, submenu }, i) => {
-            const isActive = href
-              ? pathname === href
-              : submenu?.some((s) => pathname === s.href);
+          {mainMenu
+            .filter((item) => {
+              if (item.href) return canAccess(item.href, role);
+              if (item.submenu)
+                return item.submenu.some((s) => canAccess(s.href, role));
+              return true;
+            })
+            .map(({ icon: Icon, label, href, submenu }, i) => {
+              const isActive = href
+                ? pathname === href
+                : submenu?.some((s) => pathname === s.href);
 
-            return (
-              <div key={i} className="relative group">
-                {submenu ? (
-                  <button
-                    onClick={() => toggleSubmenu(label)}
-                    onMouseEnter={() => isCollapsed && handleMouseEnter(label)}
-                    onMouseLeave={() => isCollapsed && handleMouseLeave()}
-                    className={clsx(
-                      "flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-full",
-                      { "bg-gray-100 font-semibold": isActive }
-                    )}
-                  >
-                    <Icon
-                      className={clsx("size-[18px] shrink-0", {
-                        "mx-auto": isCollapsed,
-                        "mr-3": !isCollapsed,
-                      })}
-                    />
-                    {!isCollapsed && (
-                      <span className="ml-3 flex-1 text-left">{label}</span>
-                    )}
-                    {!isCollapsed && (
-                      <span className="ml-auto">
-                        {openSubmenu === label ? (
-                          <ChevronDown size={16} />
-                        ) : (
-                          <ChevronRight size={16} />
-                        )}
-                      </span>
-                    )}
-                  </button>
-                ) : (
-                  <Link
-                    href={href!}
-                    className={clsx(
-                      "flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-full",
-                      { "bg-gray-100 font-semibold": isActive }
-                    )}
-                  >
-                    <Icon
-                      className={clsx("size-[18px] shrink-0", {
-                        "mx-auto": isCollapsed,
-                        "mr-3": !isCollapsed,
-                      })}
-                    />
-                    {!isCollapsed && (
-                      <span className="ml-3 flex-1 text-left">{label}</span>
-                    )}
-                  </Link>
-                )}
-
-                {submenu && (
-                  <>
-                    {isCollapsed && openSubmenu === label && (
-                      <div
-                        onMouseEnter={() => handleMouseEnter(label)}
-                        onMouseLeave={handleMouseLeave}
-                        className="absolute left-full top-0 ml-2 w-40 bg-white border rounded-lg shadow-md py-2 z-50"
-                      >
-                        {submenu.map((sub, j) => (
-                          <Link
-                            key={j}
-                            href={sub.href}
-                            className={clsx(
-                              "block px-4 py-2 text-sm hover:bg-gray-100 text-gray-600",
-                              {
-                                "font-semibold bg-gray-100":
-                                  pathname === sub.href,
-                              }
-                            )}
-                          >
-                            {sub.label}
-                          </Link>
-                        ))}
-                      </div>
-                    )}
-
-                    <AnimatePresence>
-                      {!isCollapsed && openSubmenu === label && (
-                        <motion.div
-                          initial={{ opacity: 0, height: 0 }}
-                          animate={{ opacity: 1, height: "auto" }}
-                          exit={{ opacity: 0, height: 0 }}
-                          className="ml-12 space-y-1 overflow-hidden"
-                        >
-                          {submenu.map((sub, j) => (
-                            <Link
-                              key={j}
-                              href={sub.href}
-                              className={clsx(
-                                "block px-4 py-1.5 text-sm text-gray-600 hover:text-black",
-                                {
-                                  "font-semibold text-black":
-                                    pathname === sub.href,
-                                }
-                              )}
-                            >
-                              {sub.label}
-                            </Link>
-                          ))}
-                        </motion.div>
+              return (
+                <div key={i} className="relative group">
+                  {submenu ? (
+                    <button
+                      onClick={() => toggleSubmenu(label)}
+                      onMouseEnter={() =>
+                        isCollapsed && handleMouseEnter(label)
+                      }
+                      onMouseLeave={() => isCollapsed && handleMouseLeave()}
+                      className={clsx(
+                        "flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-full",
+                        { "bg-gray-100 font-semibold": isActive }
                       )}
-                    </AnimatePresence>
-                  </>
-                )}
-              </div>
-            );
-          })}
+                    >
+                      <Icon
+                        className={clsx("size-[18px] shrink-0", {
+                          "mx-auto": isCollapsed,
+                          "mr-3": !isCollapsed,
+                        })}
+                      />
+                      {!isCollapsed && (
+                        <span className="ml-3 flex-1 text-left">{label}</span>
+                      )}
+                      {!isCollapsed && (
+                        <span className="ml-auto">
+                          {openSubmenu === label ? (
+                            <ChevronDown size={16} />
+                          ) : (
+                            <ChevronRight size={16} />
+                          )}
+                        </span>
+                      )}
+                    </button>
+                  ) : (
+                    <Link
+                      href={href!}
+                      className={clsx(
+                        "flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-full",
+                        { "bg-gray-100 font-semibold": isActive }
+                      )}
+                    >
+                      <Icon
+                        className={clsx("size-[18px] shrink-0", {
+                          "mx-auto": isCollapsed,
+                          "mr-3": !isCollapsed,
+                        })}
+                      />
+                      {!isCollapsed && (
+                        <span className="ml-3 flex-1 text-left">{label}</span>
+                      )}
+                    </Link>
+                  )}
+
+                  {submenu && (
+                    <>
+                      {isCollapsed && openSubmenu === label && (
+                        <div
+                          onMouseEnter={() => handleMouseEnter(label)}
+                          onMouseLeave={handleMouseLeave}
+                          className="absolute left-full top-0 ml-2 w-40 bg-white border rounded-lg shadow-md py-2 z-50"
+                        >
+                          {submenu
+                            .filter((sub) => canAccess(sub.href, role))
+                            .map((sub, j) => (
+                              <Link
+                                key={j}
+                                href={sub.href}
+                                className={clsx(
+                                  "block px-4 py-2 text-sm hover:bg-gray-100 text-gray-600",
+                                  {
+                                    "font-semibold bg-gray-100":
+                                      pathname === sub.href,
+                                  }
+                                )}
+                              >
+                                {sub.label}
+                              </Link>
+                            ))}
+                        </div>
+                      )}
+
+                      <AnimatePresence>
+                        {!isCollapsed && openSubmenu === label && (
+                          <motion.div
+                            initial={{ opacity: 0, height: 0 }}
+                            animate={{ opacity: 1, height: "auto" }}
+                            exit={{ opacity: 0, height: 0 }}
+                            className="ml-12 space-y-1 overflow-hidden"
+                          >
+                            {submenu.map((sub, j) => (
+                              <Link
+                                key={j}
+                                href={sub.href}
+                                className={clsx(
+                                  "block px-4 py-1.5 text-sm text-gray-600 hover:text-black",
+                                  {
+                                    "font-semibold text-black":
+                                      pathname === sub.href,
+                                  }
+                                )}
+                              >
+                                {sub.label}
+                              </Link>
+                            ))}
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </>
+                  )}
+                </div>
+              );
+            })}
         </div>
 
         {/* Footer */}

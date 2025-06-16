@@ -14,23 +14,20 @@ import {
 } from "lucide-react";
 
 export const mainMenu: MenuItem[] = [
-  //   {
-  //     icon: Home,
-  //     label: "Home",
-  //     href: "/",
-  //   },
+  {
+    icon: Home,
+    label: "Home",
+    href: "/",
+  },
+  {
+    icon: Users,
+    label: "Account",
+    href: "/account",
+  },
   {
     icon: ChartAreaIcon,
     label: "Dashboard",
     href: "/dashboard",
-  },
-  {
-    icon: Users,
-    label: "Audience",
-    submenu: [
-      { label: "Users", href: "/audience/users" },
-      { label: "Subscribers", href: "/audience/subscribers" },
-    ],
   },
   {
     icon: FileText,
