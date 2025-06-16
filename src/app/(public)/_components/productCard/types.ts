@@ -4,6 +4,7 @@ export type ProductTagType = "oferta" | "frete" | "novidade";
 
 export interface Product {
   id: string;
+  slug: string;
   imageUrl: string;
   tagText: string;
   tagType?: ProductTagType;

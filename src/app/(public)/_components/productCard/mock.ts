@@ -1,10 +1,11 @@
 // lib/mocks.ts
 
-import { Product } from "./types";
+import { Product } from "./types"; // Verifique se o caminho para seu arquivo de tipos está correto
 
 export const productsMock: Product[] = [
   {
     id: "prod_001",
+    slug: "smartwatch-pro-x",
     name: "Smartwatch Pro X",
     description: "Relógio inteligente com GPS e monitoramento cardíaco.",
     imageUrl:
@@ -17,6 +18,7 @@ export const productsMock: Product[] = [
   },
   {
     id: "prod_002",
+    slug: "camera-dslr-eos",
     name: "Câmera DSLR EOS",
     description: "Fotos profissionais com sensor de 24MP.",
     imageUrl:
@@ -28,6 +30,7 @@ export const productsMock: Product[] = [
   },
   {
     id: "prod_003",
+    slug: "tenis-de-corrida-runner",
     name: "Tênis de Corrida Runner",
     description: "Leveza e amortecimento para sua máxima performance.",
     imageUrl:
@@ -39,6 +42,7 @@ export const productsMock: Product[] = [
   },
   {
     id: "prod_004",
+    slug: "mochila-executiva-impermeavel",
     name: "Mochila Executiva",
     description: "Compartimento para notebook e design à prova d'água.",
     imageUrl:
@@ -48,6 +52,7 @@ export const productsMock: Product[] = [
   },
   {
     id: "prod_005",
+    slug: "fone-de-ouvido-noise-cancelling",
     name: "Fone de Ouvido Noise-Cancelling",
     description: "Imersão total no som, sem distrações do mundo exterior.",
     imageUrl:
@@ -60,6 +65,7 @@ export const productsMock: Product[] = [
   },
   {
     id: "prod_006",
+    slug: "cafeteira-expressa-automatica",
     name: "Cafeteira Expressa Automática",
     description: "Seu café perfeito ao toque de um botão.",
     imageUrl:
@@ -71,9 +77,9 @@ export const productsMock: Product[] = [
   },
   {
     id: "prod_007",
+    slug: "teclado-mecanico-gamer-rgb",
     name: "Teclado Mecânico Gamer RGB",
-    description:
-      "Precisão e velocidade para suas vitórias nos jogos online, em primeira pessoa, ou em equipe, com o melhor teclado do mercado, com RGB, com iluminação RGB, o melhor teclado do mercado.",
+    description: "Precisão e velocidade para suas vitórias nos jogos online.",
     imageUrl:
       "https://images.unsplash.com/photo-1601445638532-3c6f6c3aa122?q=80&w=1887&auto=format&fit=crop",
     price: "R$ 380,00",
@@ -82,6 +88,7 @@ export const productsMock: Product[] = [
   },
   {
     id: "prod_008",
+    slug: "drone-explorer-4k",
     name: "Drone Explorer 4K",
     description: "Capture imagens aéreas incríveis com estabilidade.",
     imageUrl:
@@ -93,6 +100,7 @@ export const productsMock: Product[] = [
   },
   {
     id: "prod_009",
+    slug: "cadeira-de-escritorio-ergonomica",
     name: "Cadeira de Escritório Ergonômica",
     description: "Conforto e postura correta para longas horas de trabalho.",
     imageUrl:
@@ -104,6 +112,7 @@ export const productsMock: Product[] = [
   },
   {
     id: "prod_010",
+    slug: "oculos-de-sol-polarizado-uv400",
     name: "Óculos de Sol Polarizado UV400",
     description: "Estilo e proteção máxima para os seus olhos.",
     imageUrl:
