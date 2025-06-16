@@ -10,7 +10,7 @@ export const cardLinks: CardData[] = [
     title: "Academy",
     href: "/academy",
     imageUrl:
-      "https://play-lh.googleusercontent.com/sBF5-1ZnOT8ZOY8kf09fSfAu_U6z3GRBJeiXksFX7qStp0frrxCMMOFvp8kw6d9HDQ=w526-h296-rw",
+      "https://plus.unsplash.com/premium_photo-1661265933107-85a5dbd815af?fm=jpg&q=60&w=3000&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8YWNhZGVtaWF8ZW58MHx8MHx8fDA%3D",
   },
   {
     title: "Instructors",
@@ -22,6 +22,6 @@ export const cardLinks: CardData[] = [
     title: "Programs",
     href: "/programs",
     imageUrl:
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSxILC7r31g1rCQifxQRmCd4W0mOSHek5S2yg&s",
+      "https://ciadocorpo.bio.br/wp-content/uploads/2024/06/sobre-2.jpg",
   },
 ];
