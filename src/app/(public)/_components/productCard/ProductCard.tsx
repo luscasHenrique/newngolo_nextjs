@@ -32,6 +32,7 @@ export function ProductCard({ product }: ProductCardProps) {
             price={product.price}
             originalPrice={product.originalPrice}
             rating={product.rating}
+            reviewCount={product.reviewCount}
           />
         </Link>
 

@@ -1,6 +1,5 @@
 // lib/mocks.ts
-
-import { Product } from "./types"; // Verifique se o caminho para seu arquivo de tipos está correto
+import { Product } from "./types";
 
 export const productsMock: Product[] = [
   {
@@ -13,6 +12,7 @@ export const productsMock: Product[] = [
     price: "R$ 799,90",
     originalPrice: "R$ 899,90",
     rating: 5,
+    reviewCount: 215, // NOVO
     tagText: "11% OFF",
     tagType: "oferta",
   },
@@ -25,6 +25,7 @@ export const productsMock: Product[] = [
       "https://images.unsplash.com/photo-1512790182412-b19e6d62bc39?q=80&w=1964&auto=format&fit=crop",
     price: "R$ 3.499,00",
     rating: 4,
+    reviewCount: 450, // NOVO
     tagText: "Frete Grátis",
     tagType: "frete",
   },
@@ -37,6 +38,7 @@ export const productsMock: Product[] = [
       "https://images.unsplash.com/photo-1542291026-7eec264c27ab?q=80&w=2070&auto=format&fit=crop",
     price: "R$ 450,50",
     rating: 4,
+    reviewCount: 88, // NOVO
     tagText: "Lançamento",
     tagType: "novidade",
   },
@@ -49,6 +51,7 @@ export const productsMock: Product[] = [
       "https://images.unsplash.com/photo-1587547131150-f6c56437198a?q=80&w=1887&auto=format&fit=crop",
     price: "R$ 249,99",
     tagText: "",
+    // Sem rating
   },
   {
     id: "prod_005",
@@ -60,6 +63,7 @@ export const productsMock: Product[] = [
     price: "R$ 629,90",
     originalPrice: "R$ 749,90",
     rating: 5,
+    reviewCount: 520, // NOVO
     tagText: "Oferta",
     tagType: "oferta",
   },
@@ -72,6 +76,7 @@ export const productsMock: Product[] = [
       "https://images.unsplash.com/photo-1565452344012-75e1a39ce6ca?q=80&w=1887&auto=format&fit=crop",
     price: "R$ 1.199,00",
     rating: 4,
+    reviewCount: 132, // NOVO
     tagText: "Frete Grátis",
     tagType: "frete",
   },
@@ -84,6 +89,7 @@ export const productsMock: Product[] = [
       "https://images.unsplash.com/photo-1601445638532-3c6f6c3aa122?q=80&w=1887&auto=format&fit=crop",
     price: "R$ 380,00",
     rating: 5,
+    reviewCount: 312, // NOVO
     tagText: "",
   },
   {
@@ -95,6 +101,7 @@ export const productsMock: Product[] = [
       "https://images.unsplash.com/photo-1527977966376-1c8408f9f108?q=80&w=1887&auto=format&fit=crop",
     price: "R$ 2.850,00",
     rating: 4,
+    reviewCount: 98, // NOVO
     tagText: "Novidade",
     tagType: "novidade",
   },
@@ -107,6 +114,7 @@ export const productsMock: Product[] = [
       "https://images.unsplash.com/photo-1580480055273-228ff53825b3?q=80&w=1887&auto=format&fit=crop",
     price: "R$ 950,00",
     rating: 5,
+    reviewCount: 741, // NOVO
     tagText: "Frete Grátis",
     tagType: "frete",
   },
@@ -121,6 +129,6 @@ export const productsMock: Product[] = [
     originalPrice: "R$ 250,00",
     tagText: "25% OFF",
     tagType: "oferta",
-    // Sem rating para testar
+    // Sem rating
   },
 ];

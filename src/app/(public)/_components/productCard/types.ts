@@ -11,6 +11,7 @@ export interface Product {
   name: string;
   description: string;
   rating?: number; // Avaliação de 0 a 5, agora opcional
+  reviewCount?: number;
   price: string; // Preço final, já formatado
   originalPrice?: string; // Preço original para exibição de desconto
 }
