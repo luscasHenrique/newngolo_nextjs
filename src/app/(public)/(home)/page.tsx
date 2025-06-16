@@ -1,5 +1,6 @@
 "use client";
 
+import { SectionTitle } from "@/components/ui/SectionTitle";
 import { ProductCard } from "../_components/productCard/ProductCard";
 import { productsMock } from "../_components/productCard/mock";
 import { CardLink } from "./_components/cardLink/CardLink";
@@ -9,8 +10,8 @@ import { videoBanner } from "./_components/videoBanner/data/videoBanner";
 
 export default function Home() {
   return (
-    <div className="space-y-10 my-10">
-      <div className="grid grid-cols-3 gap-4 max-w-7xl mx-auto px-4 ">
+    <div className="space-y-10 my-10 max-w-7xl mx-auto px-4">
+      <div className="grid grid-cols-3 gap-4   ">
         {cardLinks.map((card, index) => (
           <CardLink
             key={index}
@@ -21,7 +22,7 @@ export default function Home() {
         ))}
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 ">
+      <div className="  ">
         <VideoBanner
           title={videoBanner.title}
           buttonText={videoBanner.buttonText}
@@ -29,9 +30,12 @@ export default function Home() {
           videoSrc={videoBanner.videoSrc}
         />
       </div>
-
+      <section>
+        <SectionTitle title="Nossos Produtos em Destaque" animate={true} />
+        <p className="mt-4">Conteúdo da seção de produtos...</p>
+      </section>
       {/* Grade de Produtos */}
-      <div className="max-w-7xl mx-auto px-4 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+      <div className="  grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
         {/* Aqui fazemos o loop (map) no nosso array de produtos do mock.
             Para cada 'product' no array, um componente <ProductCard> é renderizado.
           */}
