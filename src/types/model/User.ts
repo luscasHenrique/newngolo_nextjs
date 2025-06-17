@@ -1,23 +1,33 @@
-// src/types/models/User.ts
-export enum Role {
-  ADMIN = "ADMIN",
-  SUPERADMIN = "SUPERADMIN",
-  EDITOR = "EDITOR",
-  SELLER = "SELLER",
-  VIEWER = "VIEWER",
-}
+import { Corda } from "../enums/Corda";
+import { Gender } from "../enums/Gender";
+import { Graduation } from "../enums/Graduation";
+import { UserStatus } from "../enums/UserStatus";
+import { UserType } from "../enums/UserType";
+import { Address } from "./Address";
+import { Anamnesis } from "./Anamnesis";
 
 export interface User {
-  id: string;
+  id: string; // UUID
   name: string;
+  type: UserType;
+  cpf: string;
   email: string;
-  emailVerified: boolean;
-  image?: string | null;
-  phone?: string | null;
-  role?: Role;
-  is_active: boolean;
-  bio?: string | null;
-  last_login?: string | null;
-  createdAt: string;
-  updatedAt: string;
+  gender: Gender;
+  birthdate: string; // Date
+  cellPhone: string;
+  graduation: Graduation;
+  password?: string; // Geralmente não exposto
+  address?: Address;
+  acceptedTerms: boolean;
+  image?: string;
+  createdAt: string; // Date
+  updateAt: string; // Date
+  ipCreation: string;
+  ipMachine: string;
+  deviceId: string;
+  status: UserStatus;
+  corda: Corda;
+  nickname?: string;
+  isAnamnesis: boolean;
+  anamnesis?: Anamnesis;
 }

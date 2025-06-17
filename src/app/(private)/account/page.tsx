@@ -25,13 +25,13 @@ export default function AccountPage() {
       <Tabs defaultValue="agenda" className="w-full">
         {/* Lista de botões que acionam as abas */}
         <TabsList className="grid w-full grid-cols-3 md:w-fit">
-          <TabsTrigger value="agenda">
-            <CalendarDays className="mr-2 h-4 w-4" />
-            Agenda
-          </TabsTrigger>
           <TabsTrigger value="perfil">
             <User className="mr-2 h-4 w-4" />
             Perfil
+          </TabsTrigger>
+          <TabsTrigger value="agenda">
+            <CalendarDays className="mr-2 h-4 w-4" />
+            Agenda
           </TabsTrigger>
           <TabsTrigger value="carrinho">
             <ShoppingCart className="mr-2 h-4 w-4" />
