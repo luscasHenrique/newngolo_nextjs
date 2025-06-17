@@ -8,7 +8,7 @@ export interface SubMenuItem {
 }
 
 export interface MenuItem {
-  icon?: LucideIcon;
+  icon: LucideIcon;
   label: string;
   href?: string;
   submenu?: SubMenuItem[];

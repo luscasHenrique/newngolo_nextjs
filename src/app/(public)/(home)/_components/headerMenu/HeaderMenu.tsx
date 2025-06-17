@@ -14,22 +14,29 @@ export function HeaderMenu() {
       <header className="w-full border-b border-gray-200 bg-white z-50 relative h-16">
         <div className="px-4 sm:px-6 lg:px-8 h-full flex items-center justify-between">
           {/* Esquerda - Nome clicável */}
-          <Link
-            href="/"
-            className="text-xl font-bold hover:opacity-80 transition"
-          >
-            ATOS ATLANTA
-          </Link>
 
+          <Link href="/">
+            <img
+              src="/images/logo_ngolo.png"
+              alt="Logo"
+              className="h-14 w-auto hover:opacity-80 transition"
+            />
+          </Link>
           {/* Direita - Logo e botão mobile */}
           <div className="flex items-center gap-2">
-            <Link href="/">
-              <img
-                src="/logo.svg"
-                alt="Logo"
-                className="h-8 w-auto hover:opacity-80 transition"
-              />
+            <Link
+              href="/"
+              className="text-xl font-bold hover:opacity-80 transition"
+            >
+              NGOLO
             </Link>
+            {/* <Link href="/">
+              <img
+                src="/images/logo_ngolo.png"
+                alt="Logo"
+                className="h-14 w-auto hover:opacity-80 transition"
+              />
+            </Link> */}
             <button
               className="block md:hidden p-2 rounded-md hover:bg-gray-100"
               onClick={() => setIsOpen(true)}
@@ -103,16 +110,13 @@ export function HeaderMenu() {
                   className="text-lg font-bold hover:opacity-80 transition"
                   onClick={() => setIsOpen(false)}
                 >
-                  ATOS ATLANTA
+                  <img
+                    src="/images/logo_ngolo.png"
+                    alt="Logo"
+                    className="h-6 w-auto hover:opacity-80 transition"
+                  />
                 </Link>
                 <div className="flex items-center gap-2">
-                  <Link href="/" onClick={() => setIsOpen(false)}>
-                    <img
-                      src="/logo.svg"
-                      alt="Logo"
-                      className="h-6 w-auto hover:opacity-80 transition"
-                    />
-                  </Link>
                   <button onClick={() => setIsOpen(false)}>
                     <X className="h-6 w-6" />
                   </button>
