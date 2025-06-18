@@ -1,3 +1,4 @@
+// src/app/(public)/signin/_components/login-form.tsx
 "use client";
 
 import { useState } from "react";
@@ -6,7 +7,12 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Eye, EyeOff, Loader2 } from "lucide-react";
+import { GoogleLogo } from "@phosphor-icons/react";
+import { signIn as nextAuthSignIn } from "next-auth/react"; // Importa o signIn do NextAuth.js
+
 import { notify } from "@/lib/notify";
+// Não importamos 'signIn' de "@/services/auth" diretamente para o login do formulário.
+// A autenticação é delegada ao NextAuth.js, que por sua vez chama nosso 'authServiceSignIn'.
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -18,8 +24,6 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { GoogleLogoIcon, TwitchLogo } from "@phosphor-icons/react";
-import { authClient } from "@/lib/auth-client";
 
 const loginSchema = z.object({
   email: z.string().email({ message: "Email inválido" }),
@@ -45,30 +49,30 @@ export function LoginForm() {
 
   async function onSubmit(formData: LoginFormValues) {
     setIsLoading(true);
-    await authClient.signIn.email(
-      {
+    notify.info("Verificando credenciais...");
+
+    try {
+      // Chama o signIn do NextAuth.js, passando as credenciais.
+      // O 'credentials' é o ID do provedor configurado em route.ts.
+      const result = await nextAuthSignIn("credentials", {
         email: formData.email,
         password: formData.password,
-        callbackURL: "/dashboard",
-      },
-      {
-        onRequest: () => {
-          notify.info("Verificando credenciais...");
-        },
-        onSuccess: () => {
-          notify.success("Login realizado com sucesso!");
-          router.replace("/dashboard");
-        },
-        onError: (ctx) => {
-          notify.error(
-            typeof ctx?.error === "string"
-              ? ctx.error
-              : "Erro ao realizar login."
-          );
-        },
+        redirect: false, // Importante para controlar o redirecionamento manualmente.
+      });
+
+      if (result?.error) {
+        // Se houver um erro retornado pelo NextAuth.js (geralmente da validação do authorize callback)
+        notify.error(result.error);
+      } else {
+        notify.success("Login realizado com sucesso!");
+        router.replace("/dashboard"); // Redireciona para o dashboard em caso de sucesso.
       }
-    );
-    setIsLoading(false);
+    } catch (error: any) {
+      notify.error("Ocorreu um erro inesperado no login.");
+      console.error("Erro no login do NextAuth:", error);
+    } finally {
+      setIsLoading(false);
+    }
   }
 
   return (
@@ -156,34 +160,12 @@ export function LoginForm() {
         <Button
           type="button"
           variant="outline"
-          className="w-full bg-[#ff4656] text-white hover:bg-[#db3636] hover:text-white"
-          onClick={async () => {
-            try {
-              await authClient.signIn.social({
-                provider: "google",
-                callbackURL: "/dashboard", // <- AQUI RESOLVE
-              });
-            } catch (error) {
-              console.error(error);
-              notify.error("Erro ao tentar login com Google");
-            }
-          }}
+          className="w-full"
+          disabled={isLoading}
         >
-          <GoogleLogoIcon className="mr-2 h-4 w-4" />
+          <GoogleLogo className="mr-2 h-4 w-4" />
           Entrar com Google
         </Button>
-
-        {/* <Button
-          type="button"
-          variant="outline"
-          className="w-full bg-[#9146FF] text-white hover:bg-[#7d3bdf] hover:text-white"
-          onClick={async () => {
-            notify.info("Autenticação com Github ainda não implementada");
-          }}
-        >
-          <TwitchLogo className="mr-2 h-4 w-4" />
-          Entrar com Github
-        </Button> */}
       </form>
     </Form>
   );

@@ -1,16 +1,20 @@
+// src/app/(private)/_components/navmenu/NavMenu.tsx
 "use client";
 
 import * as Tooltip from "@radix-ui/react-tooltip";
 import clsx from "clsx";
 import { AnimatePresence, motion } from "framer-motion";
-import { ChevronDown, ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronDown, ChevronLeft, ChevronRight, Loader2 } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useCurrentUser } from "@/hooks/useCurrentUser";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { authClient } from "@/lib/auth-client";
-import { footerMenu, mainMenu } from "./menuData/menu";
+// Remova: import { signOut as authSignOut } from "@/services/auth";
+import { signOut as nextAuthSignOut } from "next-auth/react"; // <-- AQUI ESTÁ A MUDANÇA
+import { MenuItem, SubMenuItem } from "@/model/Menu";
+
+import { footerMenu, mainMenu } from "../navmenu/menuData/menu";
 import { useNavMenu } from "./useNavMenu";
 import { notify } from "@/lib/notify";
 
@@ -28,21 +32,36 @@ export function NavMenu() {
   } = useNavMenu();
 
   async function signOut() {
-    await authClient.signOut({
-      fetchOptions: {
-        onSuccess: () => {
-          notify.success("Logout realizado com sucesso!");
-          router.push("/");
-        },
-        onError: (ctx) => {
-          notify.error(
-            typeof ctx?.error === "string"
-              ? ctx.error
-              : "Erro ao realizar logout."
-          );
-        },
-      },
-    });
+    try {
+      // CHAMA O SIGNOUT DO NEXTAUTH.JS
+      await nextAuthSignOut({
+        redirect: false,
+        // callbackUrl: "/signin",
+      });
+      notify.success("Logout realizado com sucesso!");
+      router.push("/signin"); // Redireciona para a página de login
+    } catch (error) {
+      notify.error("Erro ao realizar logout. Tente novamente.");
+      console.error("Erro ao realizar logout:", error);
+    }
+  }
+
+  if (loading) {
+    return (
+      <aside
+        className={`h-full rounded-4xl p-1 bg-white transition-[width] duration-300 ease-in-out ${
+          isCollapsed ? "w-16" : "w-64"
+        } flex flex-col items-center justify-center`}
+        style={{
+          filter: "drop-shadow(0 4px 6px rgba(188, 188, 188, 0.573))",
+        }}
+      >
+        <Loader2 className="h-8 w-8 animate-spin text-gray-500" />
+        {!isCollapsed && (
+          <p className="mt-2 text-gray-500">Carregando menu...</p>
+        )}
+      </aside>
+    );
   }
 
   return (
@@ -66,8 +85,8 @@ export function NavMenu() {
                 <Avatar className="h-10 w-10">
                   <AvatarImage
                     src={
-                      user?.image
-                        ? String(user.image)
+                      user?.imageUrl
+                        ? String(user.imageUrl)
                         : "https://github.com/shadcn.png"
                     }
                     alt={user?.name || "Avatar"}
@@ -85,10 +104,10 @@ export function NavMenu() {
                   >
                     {user?.name || "Usuário"}
                     <br />
-                    {user?.email || ""}
+                    {user?.email || "Email não disponível"}
                     <br />
                     <span className="text-xs text-gray-300">
-                      {user?.role || ""}
+                      {user?.type || ""}
                     </span>
                   </Tooltip.Content>
                 </Tooltip.Portal>
@@ -102,46 +121,49 @@ export function NavMenu() {
                 {user?.email || "sem-email"}
               </p>
               <p className="text-xs text-gray-400 uppercase">
-                {user?.role || ""}
+                {user?.type || ""}
               </p>
             </div>
           )}
         </div>
 
-        {/* Main Menu */}
         <div className="flex-1 space-y-1">
           {!isCollapsed && (
             <p className="px-4 pt-2 pb-1 text-xs text-gray-400">MAIN</p>
           )}
-          {mainMenu.map(({ icon: Icon, label, href, submenu }, i) => {
-            const isActive = href
-              ? pathname === href
-              : submenu?.some((s) => pathname === s.href);
+          {mainMenu.map((item: MenuItem, i: number) => {
+            const isActive = item.href
+              ? pathname === item.href
+              : item.submenu?.some((s: SubMenuItem) => pathname === s.href);
 
             return (
               <div key={i} className="relative group">
-                {submenu ? (
+                {item.submenu ? (
                   <button
-                    onClick={() => toggleSubmenu(label)}
-                    onMouseEnter={() => isCollapsed && handleMouseEnter(label)}
+                    onClick={() => toggleSubmenu(item.label)}
+                    onMouseEnter={() =>
+                      isCollapsed && handleMouseEnter(item.label)
+                    }
                     onMouseLeave={() => isCollapsed && handleMouseLeave()}
                     className={clsx(
                       "flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-full",
                       { "bg-gray-100 font-semibold": isActive }
                     )}
                   >
-                    <Icon
+                    <item.icon
                       className={clsx("size-[18px] shrink-0", {
                         "mx-auto": isCollapsed,
                         "mr-3": !isCollapsed,
                       })}
                     />
                     {!isCollapsed && (
-                      <span className="ml-3 flex-1 text-left">{label}</span>
+                      <span className="ml-3 flex-1 text-left">
+                        {item.label}
+                      </span>
                     )}
                     {!isCollapsed && (
                       <span className="ml-auto">
-                        {openSubmenu === label ? (
+                        {openSubmenu === item.label ? (
                           <ChevronDown size={16} />
                         ) : (
                           <ChevronRight size={16} />
@@ -151,33 +173,35 @@ export function NavMenu() {
                   </button>
                 ) : (
                   <Link
-                    href={href!}
+                    href={item.href!}
                     className={clsx(
                       "flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-full",
                       { "bg-gray-100 font-semibold": isActive }
                     )}
                   >
-                    <Icon
+                    <item.icon
                       className={clsx("size-[18px] shrink-0", {
                         "mx-auto": isCollapsed,
                         "mr-3": !isCollapsed,
                       })}
                     />
                     {!isCollapsed && (
-                      <span className="ml-3 flex-1 text-left">{label}</span>
+                      <span className="ml-3 flex-1 text-left">
+                        {item.label}
+                      </span>
                     )}
                   </Link>
                 )}
 
-                {submenu && (
+                {item.submenu && (
                   <>
-                    {isCollapsed && openSubmenu === label && (
+                    {isCollapsed && openSubmenu === item.label && (
                       <div
-                        onMouseEnter={() => handleMouseEnter(label)}
+                        onMouseEnter={() => handleMouseEnter(item.label)}
                         onMouseLeave={handleMouseLeave}
                         className="absolute left-full top-0 ml-2 w-40 bg-white border rounded-lg shadow-md py-2 z-50"
                       >
-                        {submenu.map((sub, j) => (
+                        {item.submenu.map((sub: SubMenuItem, j: number) => (
                           <Link
                             key={j}
                             href={sub.href}
@@ -196,14 +220,14 @@ export function NavMenu() {
                     )}
 
                     <AnimatePresence>
-                      {!isCollapsed && openSubmenu === label && (
+                      {!isCollapsed && openSubmenu === item.label && (
                         <motion.div
                           initial={{ opacity: 0, height: 0 }}
                           animate={{ opacity: 1, height: "auto" }}
                           exit={{ opacity: 0, height: 0 }}
                           className="ml-12 space-y-1 overflow-hidden"
                         >
-                          {submenu.map((sub, j) => (
+                          {item.submenu.map((sub: SubMenuItem, j: number) => (
                             <Link
                               key={j}
                               href={sub.href}
@@ -230,36 +254,42 @@ export function NavMenu() {
 
         {/* Footer */}
         <div className="mt-auto space-y-1 py-4">
-          {footerMenu.map(({ icon: Icon, label, href, color }, idx) => {
-            const isLogout = label.toLowerCase() === "logout";
+          {footerMenu.map((item: MenuItem, idx: number) => {
+            const isLogout = item.label.toLowerCase() === "logout";
 
             return isLogout ? (
               <button
                 key={idx}
-                onClick={signOut}
-                className={`flex items-center w-full px-4 py-2 text-sm rounded-full ${color}`}
+                onClick={signOut} // Chama a função signOut local
+                className={clsx(
+                  "flex items-center w-full px-4 py-2 text-sm rounded-full",
+                  item.color
+                )}
               >
-                <Icon
+                <item.icon
                   className={clsx("size-5 shrink-0", {
                     "mx-auto": isCollapsed,
                     "mr-3": !isCollapsed,
                   })}
                 />
-                {!isCollapsed && <span>{label}</span>}
+                {!isCollapsed && <span>{item.label}</span>}
               </button>
             ) : (
               <Link
                 key={idx}
-                href={href}
-                className={`flex items-center w-full px-4 py-2 text-sm rounded-full ${color}`}
+                href={item.href!}
+                className={clsx(
+                  "flex items-center w-full px-4 py-2 text-sm rounded-full",
+                  item.color
+                )}
               >
-                <Icon
+                <item.icon
                   className={clsx("size-5 shrink-0", {
                     "mx-auto": isCollapsed,
                     "mr-3": !isCollapsed,
                   })}
                 />
-                {!isCollapsed && <span>{label}</span>}
+                {!isCollapsed && <span>{item.label}</span>}
               </Link>
             );
           })}
