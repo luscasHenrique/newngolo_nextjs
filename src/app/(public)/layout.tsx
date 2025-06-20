@@ -25,7 +25,9 @@ export default function PublicLayout({
     // Retorna APENAS o conteúdo principal deste layout.
     <>
       <HeaderMenu /> {/* Componente de cabeçalho para a área pública */}
-      {children} {/* Páginas públicas (ex: /signin, /signup) */}
+      <div className="space-y-10 my-10 max-w-7xl mx-auto px-4">
+        {children} {/* Páginas públicas (ex: /signin, /signup) */}
+      </div>
       {/* REMOVIDO: <ToastProvider /> */}
     </>
   );

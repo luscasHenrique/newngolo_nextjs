@@ -16,6 +16,7 @@ export interface UserProfile {
   rg?: string; // Opcional
   cellPhone?: string;
   telephone?: string; // Opcional
+  address?: Address[];
   email: string; // CONFIRMADO: Email está aqui e é obrigatório no perfil completo
   gender?: Gender; // Enum Gender
   birthDate?: string; // Formato de data "AAAA-MM-DD"
@@ -23,7 +24,6 @@ export interface UserProfile {
   imageBase64?: string; // Opcional
   image?: string; // Opcional (URL ou caminho para imagem)
   imageUrl?: string;
-  address?: Address; // Objeto de endereço
   cards?: CardClient[]; // Se você precisar de cards no perfil completo
   checkData?: boolean; // Opcional
   data?: string; // Opcional

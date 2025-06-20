@@ -1,10 +1,13 @@
-// components/product/ProductActions.tsx
+// src/app/(public)/_components/productCard/ProductActions.tsx
+"use client"; // Client Component
+
+import React from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { ShoppingCart } from "lucide-react";
 
 interface ProductActionsProps {
-  productUrl: string;
+  productUrl: string; // URL para a página de detalhes do produto
 }
 
 export function ProductActions({ productUrl }: ProductActionsProps) {
@@ -17,10 +20,9 @@ export function ProductActions({ productUrl }: ProductActionsProps) {
       {/* Botão do carrinho com as alterações */}
       <Button
         variant="ghost"
-        // 1. Alteramos o 'size' para 'icon' para criar um botão quadrado, ideal para ícones.
-        size="icon"
-        // 2. Adicionamos estas classes para a animação de hover.
+        size="icon" // Definido como "icon" para o botão quadrado
         className="transition-transform duration-200 ease-out hover:-translate-y-0.5 hover:bg-transparent"
+        // onClick={() => { /* Lógica para adicionar ao carrinho */ }} // Adicione a lógica de clique se não for só visual
       >
         <ShoppingCart className="h-4 w-4" />
         <span className="sr-only">Adicionar ao carrinho</span>

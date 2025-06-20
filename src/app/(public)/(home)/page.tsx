@@ -1,8 +1,8 @@
 "use client";
 
 import { SectionTitle } from "@/components/ui/SectionTitle";
-import { ProductCard } from "../_components/productCard/ProductCard";
-import { productsMock } from "../_components/productCard/mock";
+import { ProductCard } from "../products/_components/productCard/ProductCard";
+import { productsMock } from "../products/_components/productCard/mock";
 import { CardLink } from "./_components/cardLink/CardLink";
 import { cardLinks } from "./_components/cardLink/data/cardLinks";
 import { VideoBanner } from "./_components/videoBanner/VideoBanner";
@@ -10,7 +10,7 @@ import { videoBanner } from "./_components/videoBanner/data/videoBanner";
 
 export default function Home() {
   return (
-    <div className="space-y-10 my-10 max-w-7xl mx-auto px-4">
+    <>
       <div className="grid grid-cols-3 gap-4   ">
         {cardLinks.map((card, index) => (
           <CardLink
@@ -46,6 +46,6 @@ export default function Home() {
           />
         ))}
       </div>
-    </div>
+    </>
   );
 }

@@ -4,14 +4,15 @@ import { Card } from "@/components/ui/card";
 import { ProductImage } from "./ProductImage";
 import { ProductDetails } from "./ProductDetails";
 import { ProductActions } from "./ProductActions";
-import { Product } from "./types";
+// import { Product } from "./types";
+import { Product } from "@/types/product/product";
 
 export interface ProductCardProps {
   product: Product;
 }
 export function ProductCard({ product }: ProductCardProps) {
   // 2. CRIE A URL DO PRODUTO DINAMICAMENTE
-  const productUrl = `/products/${product.slug}`;
+  const productUrl = `/products/${product.id}`;
 
   return (
     <Card className="py-0 gap-0 w-full max-w-sm rounded-lg overflow-hidden shadow-lg border hover:shadow-xl transition-shadow duration-300 ease-in-out flex flex-col">
