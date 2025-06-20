@@ -6,7 +6,7 @@
 // REMOVA: import "../globals.css"; // CSS global é importado no layout raiz.
 // REMOVA: import { ToastProvider } from "@/components/providers/ToastProvider"; // ToastProvider agora está no layout raiz.
 
-import { HeaderMenu } from "./(home)/_components/headerMenu/HeaderMenu"; // Seu componente de cabeçalho público.
+import { HeaderMenu } from "./_components/headerMenu/HeaderMenu"; // Seu componente de cabeçalho público.
 
 // NÃO DEFINA FONTES AQUI:
 // const geistSans = Geist({...});
