@@ -41,16 +41,16 @@ export const productsMock: Product[] = [
     slug: "camera-dslr-eos",
     name: "Câmera DSLR EOS",
     description: "Fotos profissionais com sensor de 24MP.",
-    imageUrl:
-      "https://images.unsplash.com/photo-1546868871-7041f2a55e12?q=80&w=1964&auto=format&fit=crop",
     price: 3499.0, // <--- AGORA É NUMBER
     rating: 4,
     reviewCount: 450,
     tagText: "Frete Grátis",
     tagType: "freeShipping", // <--- AGORA É 'freeShipping'
+    imageUrl:
+      "https://images.unsplash.com/photo-1631652645581-a4bc83d8911b?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8QyVDMyVBMm1lcmElMjBEU0xSJTIwRU9TfGVufDB8fDB8fHww",
     imagens: [
-      "https://images.unsplash.com/photo-1546868871-7041f2a55e12?q=80&w=1964&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-154283137-0130638e8e7a?q=80&w=1964&auto=format&fit=crop", // Outra imagem, URL completa
+      "https://images.unsplash.com/photo-1554048612-b6a482bc67e5?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OHx8QyVDMyVBMm1lcmElMjBEU0xSJTIwRU9TfGVufDB8fDB8fHww",
+      "https://images.unsplash.com/photo-1533246860975-b290a87773d3?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8QyVDMyVBMm1lcmElMjBEU0xSJTIwRU9TfGVufDB8fDB8fHww", // Outra imagem, URL completa
     ],
     grade: [],
     seller: { city: "Rio de Janeiro" },
