@@ -1,5 +1,6 @@
 // src/app/(public)/(home)/_components/headerMenu/menu.ts
-
+// Certifique-se que você tenha o caminho correto para o seu MenuItem.
+// ex: import { MenuItem } from "@/types/model/Menu";
 import { MenuItem } from "@/model/Menu";
 import {
   Home,
@@ -10,13 +11,16 @@ import {
   Settings,
   HelpCircle,
   LogOut,
+  // Certifique-se de que ChartAreaIcon e LockKeyhole estão sendo importados
   ChartAreaIcon,
   LockKeyhole,
   Linkedin,
   Facebook,
   Twitter,
-  Dribbble,
-} from "lucide-react";
+  Dribbble, // Ícones sociais
+  User as UserIcon,
+  SettingsIcon, // Renomeado User para evitar conflito com 'user' genérico
+} from "lucide-react"; // Adicionado User para o ícone de perfil
 
 // Menu principal
 export const mainHeaderMenu: MenuItem[] = [
@@ -44,7 +48,7 @@ export const mainHeaderMenu: MenuItem[] = [
     label: "Income",
     submenu: [
       {
-        label: "Income 1",
+        label: "Earnings",
         href: "/income-1",
       },
       {
@@ -55,13 +59,22 @@ export const mainHeaderMenu: MenuItem[] = [
   },
   {
     icon: LockKeyhole,
-    label: "Login",
+    label: "Login", // Este será substituído pelo "Perfil" se o usuário estiver logado.
     href: "/signin",
   },
 ];
 
+export const profileMenu: MenuItem[] = [
+  // Tipado como MenuItem[]
+  { label: "Meu Perfil", href: "/account", icon: UserIcon }, // Exemplo: para página de conta
+  { label: "Configurações", href: "/settings", icon: SettingsIcon },
+  { label: "Sair", href: "#", icon: LogOut, action: "logout" }, // Ação de logout
+];
+
 // Links do footer (parte inferior do menu mobile)
-export const footerMenuLinks = [
+// O nome `footerMenuLinks` é mais descritivo do que `footerMenu` se `footerMenu` já for usado para outra coisa.
+export const footerMenuLinks: MenuItem[] = [
+  // Tipado explicitamente
   {
     icon: Settings,
     label: "Settings",
@@ -77,8 +90,9 @@ export const footerMenuLinks = [
   {
     icon: LogOut,
     label: "Logout",
-    href: "/logout",
+    href: "#", // Ou "/" para ir para a home, mas a ação vai lidar com o logout.
     color: "text-red-600 hover:bg-red-50",
+    action: "logout", // Adicionado para identificar a ação de logout
   },
 ];
 
@@ -89,7 +103,14 @@ export const footerContact = {
 };
 
 // Ícones sociais com links
-export const footerSocial = [
+interface SocialLink {
+  // Interface para links sociais
+  label: string;
+  href: string;
+  icon: React.ElementType; // Icon é um componente React
+}
+export const footerSocial: SocialLink[] = [
+  // Tipado explicitamente
   {
     label: "LinkedIn",
     href: "https://linkedin.com",

@@ -1,93 +1,171 @@
+// src/app/(public)/(home)/_components/headerMenu/HeaderMenu.tsx
 "use client";
 
-import { useState } from "react";
+import { useState } from "react"; // <-- Certificar que useState está importado
 import Link from "next/link";
-import { Menu, X } from "lucide-react";
+import {
+  Menu,
+  X,
+  User as UserIcon,
+  LogOut,
+  Settings as SettingsIcon,
+  ChevronDown,
+  ChevronRight,
+  Loader2,
+  LockKeyhole,
+} from "lucide-react"; // Importar LockKeyhole
 import { motion, AnimatePresence } from "framer-motion";
-import { footerContact, footerSocial, mainHeaderMenu } from "./menu";
+import { useSession, signOut as nextAuthSignOut } from "next-auth/react";
+import { notify } from "@/lib/notify";
+
+import {
+  footerContact,
+  footerSocial,
+  mainHeaderMenu as originalMainHeaderMenu,
+  profileMenu,
+} from "./menu";
+import router from "next/router";
 
 export function HeaderMenu() {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false); // Estado para abrir/fechar o menu mobile principal
+  const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false); // <-- AQUI! Estado para o submenu "Perfil" no mobile
+  const { data: session, status } = useSession();
+  const isLoading = status === "loading";
+
+  async function handleLogout() {
+    try {
+      await nextAuthSignOut({
+        redirect: false,
+        callbackUrl: "/signin",
+      });
+      notify.success("Sessão encerrada com sucesso!");
+    } catch (error) {
+      notify.error("Erro ao fazer logout.");
+      console.error("Logout error:", error);
+    }
+  }
+
+  const dynamicMainMenu = [...originalMainHeaderMenu];
+
+  if (!isLoading && status === "authenticated" && session?.user) {
+    const loginIndex = dynamicMainMenu.findIndex(
+      (item) => item.label === "Login" && item.href === "/signin"
+    );
+    if (loginIndex > -1) {
+      dynamicMainMenu.splice(loginIndex, 1);
+    }
+    dynamicMainMenu.push({
+      icon: UserIcon,
+      label: session.user.name || "Perfil",
+      submenu: profileMenu.map((item) => ({
+        label: item.label,
+        href: item.href,
+        icon: item.icon,
+        action: item.action,
+      })),
+    });
+  } else if (!isLoading && status === "unauthenticated") {
+    const loginExists = dynamicMainMenu.some(
+      (item) => item.label === "Login" && item.href === "/signin"
+    );
+    if (!loginExists) {
+      dynamicMainMenu.push({
+        icon: LockKeyhole,
+        label: "Login",
+        href: "/signin",
+      });
+    }
+  }
 
   return (
     <>
       <header className="w-full border-b border-gray-200 bg-white z-50 relative h-16">
         <div className="px-4 sm:px-6 lg:px-8 h-full flex items-center justify-between">
-          {/* Esquerda - Nome clicável */}
-
           <Link href="/">
             <img
               src="/images/logo_ngolo.png"
-              alt="Logo"
+              alt="Logo N'GOLO Capoeira"
               className="h-14 w-auto hover:opacity-80 transition"
             />
           </Link>
-          {/* Direita - Logo e botão mobile */}
           <div className="flex items-center gap-2">
             <Link
               href="/"
-              className="text-xl font-bold hover:opacity-80 transition"
+              className="text-xl font-bold hover:opacity-80 transition hidden md:block"
             >
               NGOLO
             </Link>
-            {/* <Link href="/">
-              <img
-                src="/images/logo_ngolo.png"
-                alt="Logo"
-                className="h-14 w-auto hover:opacity-80 transition"
-              />
-            </Link> */}
             <button
               className="block md:hidden p-2 rounded-md hover:bg-gray-100"
               onClick={() => setIsOpen(true)}
+              disabled={isLoading}
             >
               <Menu className="h-6 w-6" />
             </button>
           </div>
         </div>
 
-        {/* Centro - Menu Desktop centralizado absoluto */}
         <nav className="hidden md:flex absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 space-x-6 z-10">
-          {mainHeaderMenu.map((item, index) => (
-            <div key={index} className="relative">
-              <div className="group inline-block">
-                {item.href ? (
-                  <Link
-                    href={item.href}
-                    className="text-sm font-medium text-gray-700 hover:text-black px-2 py-1 inline-block"
-                  >
-                    {item.label}
-                  </Link>
-                ) : (
-                  <span className="text-sm font-medium text-gray-700 cursor-default px-2 py-1 inline-block">
-                    {item.label}
-                  </span>
-                )}
-
-                {item.submenu && (
-                  <div className="absolute left-0 mt-2 bg-white shadow-md rounded-md w-48 opacity-0 invisible group-hover:visible group-hover:opacity-100 transition-all z-50">
-                    {item.submenu.map((sub, subIndex) => (
-                      <Link
-                        key={subIndex}
-                        href={sub.href}
-                        className="block px-4 py-2 text-sm text-gray-600 hover:bg-gray-100 rounded-md"
-                      >
-                        {sub.label}
-                      </Link>
-                    ))}
-                  </div>
-                )}
-              </div>
+          {isLoading ? (
+            <div className="flex items-center space-x-2 text-gray-500">
+              <Loader2 className="h-5 w-5 animate-spin" />
+              <span>Carregando...</span>
             </div>
-          ))}
+          ) : (
+            dynamicMainMenu.map((item, index) => (
+              <div key={index} className="relative">
+                <div className="group inline-block">
+                  {item.href && item.href !== "#" && !item.submenu ? (
+                    <Link
+                      href={item.href}
+                      className="text-sm font-medium text-gray-700 hover:text-black px-2 py-1 inline-block"
+                    >
+                      {item.label}
+                    </Link>
+                  ) : item.submenu ? (
+                    <span className="text-sm font-medium text-gray-700 hover:text-black px-2 py-1 inline-flex items-center cursor-pointer">
+                      {item.label}
+                      <ChevronDown size={14} className="ml-1" />
+                    </span>
+                  ) : (
+                    <span className="text-sm font-medium text-gray-400 px-2 py-1 inline-block cursor-default">
+                      {item.label}
+                    </span>
+                  )}
+
+                  {item.submenu && (
+                    <div className="absolute left-0 mt-2 bg-white shadow-md rounded-md w-48 opacity-0 invisible group-hover:visible group-hover:opacity-100 transition-all z-50">
+                      {item.submenu.map((sub, subIndex) => (
+                        <button
+                          key={subIndex}
+                          onClick={() => {
+                            if (sub.action === "logout") {
+                              handleLogout();
+                            } else if (sub.href) {
+                              router.push(sub.href);
+                            }
+                          }}
+                          className="flex items-center px-4 py-2 text-sm text-gray-600 hover:bg-gray-100 rounded-md w-full text-left"
+                        >
+                          {sub.icon && (
+                            <sub.icon className="inline-block mr-2 h-4 w-4" />
+                          )}
+                          {sub.label}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </div>
+            ))
+          )}
         </nav>
       </header>
 
-      {/* Overlay + Menu animado com Framer Motion */}
+      {/* Overlay + Menu mobile animado */}
       <AnimatePresence>
         {isOpen && (
           <>
-            {/* Overlay com fade-in/out */}
             <motion.div
               className="fixed inset-0 bg-black/30 z-40 md:hidden"
               initial={{ opacity: 0 }}
@@ -96,13 +174,12 @@ export function HeaderMenu() {
               onClick={() => setIsOpen(false)}
             />
 
-            {/* Menu mobile deslizando da esquerda */}
             <motion.div
               initial={{ x: "-100%" }}
               animate={{ x: 0 }}
               exit={{ x: "-100%" }}
               transition={{ type: "tween", duration: 0.3 }}
-              className="fixed top-0 left-0 h-full w-72 bg-white z-50 shadow-lg p-4 md:hidden overflow-y-auto"
+              className="fixed top-0 left-0 h-full w-72 bg-white z-50 shadow-lg p-4 md:hidden flex flex-col overflow-y-auto"
             >
               <div className="flex justify-between items-center border-b pb-2">
                 <Link
@@ -112,7 +189,7 @@ export function HeaderMenu() {
                 >
                   <img
                     src="/images/logo_ngolo.png"
-                    alt="Logo"
+                    alt="Logo N'GOLO Capoeira"
                     className="h-6 w-auto hover:opacity-80 transition"
                   />
                 </Link>
@@ -123,36 +200,74 @@ export function HeaderMenu() {
                 </div>
               </div>
 
-              <div className="pt-4 space-y-2">
-                {mainHeaderMenu.map((item, index) => (
+              <div className="pt-4 space-y-2 flex-1 overflow-y-auto">
+                {dynamicMainMenu.map((item, index) => (
                   <div key={index}>
-                    {item.href ? (
+                    {item.href && item.href !== "#" ? (
                       <Link
                         href={item.href}
                         className="block py-2 font-medium text-gray-700 hover:bg-gray-100 rounded px-3"
                         onClick={() => setIsOpen(false)}
                       >
+                        {item.icon && (
+                          <item.icon className="inline-block mr-2 h-4 w-4" />
+                        )}
                         {item.label}
                       </Link>
-                    ) : !item.submenu ? (
+                    ) : item.submenu ? (
+                      <div className="py-2">
+                        <button
+                          onClick={() => setIsProfileMenuOpen((prev) => !prev)} // Mobile submenu toggle
+                          className="flex items-center w-full font-medium text-gray-700 hover:bg-gray-100 rounded px-3 py-2"
+                        >
+                          {item.icon && (
+                            <item.icon className="inline-block mr-2 h-4 w-4" />
+                          )}
+                          {item.label}
+                          <span className="ml-auto">
+                            {isProfileMenuOpen ? (
+                              <ChevronDown size={16} />
+                            ) : (
+                              <ChevronRight size={16} />
+                            )}
+                          </span>
+                        </button>
+                        <AnimatePresence>
+                          {isProfileMenuOpen && (
+                            <motion.div
+                              initial={{ height: 0, opacity: 0 }}
+                              animate={{ height: "auto", opacity: 1 }}
+                              exit={{ height: 0, opacity: 0 }}
+                              transition={{ duration: 0.2 }}
+                              className="ml-4 space-y-1 overflow-hidden"
+                            >
+                              {item.submenu.map((sub, subIndex) => (
+                                <button
+                                  key={subIndex}
+                                  onClick={() => {
+                                    if (sub.action === "logout") {
+                                      handleLogout();
+                                    } else if (sub.href) {
+                                      router.push(sub.href);
+                                    }
+                                    setIsOpen(false);
+                                  }}
+                                  className="block px-3 py-1 text-sm text-gray-600 hover:bg-gray-100 rounded w-full text-left"
+                                >
+                                  {sub.icon && (
+                                    <sub.icon className="inline-block mr-2 h-4 w-4" />
+                                  )}
+                                  {sub.label}
+                                </button>
+                              ))}
+                            </motion.div>
+                          )}
+                        </AnimatePresence>
+                      </div>
+                    ) : (
                       <span className="block py-2 font-medium text-gray-400 px-3 cursor-default">
                         {item.label}
                       </span>
-                    ) : null}
-
-                    {item.submenu && (
-                      <div className="ml-4 space-y-1">
-                        {item.submenu.map((sub, subIndex) => (
-                          <Link
-                            key={subIndex}
-                            href={sub.href}
-                            className="block text-sm text-gray-600 hover:bg-gray-100 rounded px-3 py-1"
-                            onClick={() => setIsOpen(false)}
-                          >
-                            {sub.label}
-                          </Link>
-                        ))}
-                      </div>
                     )}
                   </div>
                 ))}
@@ -179,9 +294,7 @@ export function HeaderMenu() {
                   ))}
                 </div>
 
-                <p className="text-gray-400 text-xs pt-4">
-                  &copy; 2025 ATOS ATL
-                </p>
+                <p className="text-gray-400 text-xs pt-4">&copy; 2025 NGOLO</p>
               </div>
             </motion.div>
           </>
