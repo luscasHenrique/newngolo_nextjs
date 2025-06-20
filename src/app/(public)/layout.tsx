@@ -21,14 +21,11 @@ export default function PublicLayout({
   children: React.ReactNode;
 }>) {
   return (
-    // REMOVIDO: <html lang="en"> e <body>. O layout raiz já os fornece.
-    // Retorna APENAS o conteúdo principal deste layout.
     <>
       <HeaderMenu /> {/* Componente de cabeçalho para a área pública */}
       <div className="space-y-10 my-10 max-w-7xl mx-auto px-4">
         {children} {/* Páginas públicas (ex: /signin, /signup) */}
       </div>
-      {/* REMOVIDO: <ToastProvider /> */}
     </>
   );
 }

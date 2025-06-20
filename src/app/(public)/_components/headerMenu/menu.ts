@@ -1,6 +1,6 @@
 // src/app/(public)/(home)/_components/headerMenu/menu.ts
 
-import { MenuItem } from "@/types/model/Menu";
+import { MenuItem } from "@/model/Menu";
 import {
   Home,
   Users,
