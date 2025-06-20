@@ -25,9 +25,9 @@ import {
 // Menu principal
 export const mainHeaderMenu: MenuItem[] = [
   {
-    icon: ChartAreaIcon,
-    label: "Dashboard",
-    href: "/dashboard",
+    icon: Home,
+    label: "Home",
+    href: "/",
   },
   {
     icon: Users,
