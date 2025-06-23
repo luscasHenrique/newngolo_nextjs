@@ -108,7 +108,34 @@ export const productsMock: Product[] = [
       "https://images.unsplash.com/photo-1546868871-7041f2a55e12?q=80&w=1964&auto=format&fit=crop",
       "https://images.unsplash.com/photo-154283137-0130638e8e7a?q=80&w=1964&auto=format&fit=crop", // Outra imagem, URL completa
     ],
-    grade: [],
+    grade: [
+      {
+        id: "color-black",
+        name: "Cor",
+        color: "Preto",
+        image:
+          "https://images.unsplash.com/photo-1546868871-7041f2a55e12?q=80&w=1964&auto=format&fit=crop",
+        gradeSizes: [
+          { id: "size-34", size: "34", price: { price: 799.9 } },
+          { id: "size-35", size: "35", price: { price: 799.9 } },
+          { id: "size-36", size: "36", price: { price: 799.9 } },
+          { id: "size-37", size: "37", price: { price: 799.9 } },
+        ],
+      },
+      {
+        id: "color-white",
+        name: "Cor",
+        color: "Branco",
+        image:
+          "https://images.unsplash.com/photo-1546868871-7041f2a55e12?q=80&w=1964&auto=format&fit=crop",
+        gradeSizes: [
+          { id: "size-34", size: "34", price: { price: 799.9 } },
+          { id: "size-35", size: "35", price: { price: 799.9 } },
+          { id: "size-36", size: "36", price: { price: 799.9 } },
+          { id: "size-37", size: "37", price: { price: 799.9 } },
+        ],
+      },
+    ],
     seller: { city: "São Paulo" },
     dimensions: { height: "12", width: "8", depth: "4", weight: "0.5" },
     review: [],
