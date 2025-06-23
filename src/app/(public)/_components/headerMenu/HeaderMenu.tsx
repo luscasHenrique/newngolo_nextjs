@@ -321,7 +321,9 @@ export function HeaderMenu() {
                   ))}
                 </div>
 
-                <p className="text-gray-400 text-xs pt-4">&copy; 2025 NGOLO</p>
+                <p className="text-gray-400 text-xs pt-4">
+                  &copy; 2025 N'GOLO Capoeira - Todos os direitos reservados.
+                </p>
               </div>
             </motion.div>
           </>

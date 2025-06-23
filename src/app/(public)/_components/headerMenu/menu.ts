@@ -94,8 +94,8 @@ export const footerMenuLinks: MenuItem[] = [
 
 // Informações de contato
 export const footerContact = {
-  phone: "678 324 7259",
-  email: "info@atosbjj-atl.com",
+  phone: "999 999 999 9999",
+  email: "info@ngolo.com",
 };
 
 // Ícones sociais com links
