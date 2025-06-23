@@ -4,66 +4,72 @@
 import React from "react";
 import { Product } from "@/types/product/product";
 import { UserProfile } from "@/model/UserProfile";
-// CORREÇÃO: Removido '//' duplo e ajustado a importação dos tipos de seleção
 import {
   SelectedColorState,
   SelectedSizeState,
   SelectedOption,
-} from "../productGrade/useProductGrade";
+} from "../productGrade/useProductGrade"; // Tipos necessários
 import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
-import ProductGradeUI from "../productGrade/ProductGradeUI"; // Certifique-se que este caminho está correto
+import { useProductGrade } from "../productGrade/useProductGrade"; // Importe o hook useProductGrade
+import ProductGradeUI from "../productGrade/ProductGradeUI";
 
 interface ProductInfoProps {
   products: Product;
   quantity: number;
-  user: UserProfile | null; // <-- CORREÇÃO AQUI: A prop 'user' PODE SER NULL
+  user: UserProfile | null;
   shippingCost: string | null;
-  selectedImage?: string; // Adicionado como opcional, pois nem sempre é usado
-  selectedColor: SelectedColorState;
-  selectedSize: SelectedSizeState;
+  selectedImage?: string;
+  selectedColor: SelectedColorState; // Passado para o useProductGrade para inicialização/sincronização
+  selectedSize: SelectedSizeState; // Passado para o useProductGrade para inicialização/sincronização
   isCalculatingShipping: boolean;
   onAddCart: () => void;
   quantityChange: (increment: boolean) => void;
+  // Funções passadas para useProductGrade para atualizar o estado principal
   handleColorSelect: (color?: string, image?: string, id?: string) => void;
   handleSizeSelect: (size: string, id: string) => void;
   zipCode: string;
   onZipCodeChange: (value: string) => void;
   onCalculateShipping: () => void;
-  // Props para ProductGradeUI (virão do useProductPage.ts)
-  productGradeOptions: Record<string, SelectedOption[]>;
-  productGradeSelectedOptions: Record<string, SelectedOption>;
-  onProductGradeOptionSelect: (
-    category: string,
-    option: SelectedOption
-  ) => void;
-  handleProductGradeMouseDown: (e: React.MouseEvent, category: string) => void;
-  handleProductGradeMouseMove: (e: React.MouseEvent, category: string) => void;
-  handleProductGradeMouseUpOrLeave: (category: string) => void;
+  // Removidas as props handleProductGrade... e productGrade... daqui
+  // Elas agora são internas ao ProductGradeUI e useProductGrade
 }
 
 export const ProductInfo: React.FC<ProductInfoProps> = ({
   products,
   quantity,
-  user, // <-- user agora pode ser null aqui
+  user,
   shippingCost,
   selectedColor,
   selectedSize,
   isCalculatingShipping,
   onAddCart,
   quantityChange,
-  handleColorSelect,
-  handleSizeSelect,
+  handleColorSelect, // Passado para o useProductGrade
+  handleSizeSelect, // Passado para o useProductGrade
   zipCode,
   onZipCodeChange,
   onCalculateShipping,
-  productGradeOptions,
-  productGradeSelectedOptions,
-  onProductGradeOptionSelect,
-  handleProductGradeMouseDown,
-  handleProductGradeMouseMove,
-  handleProductGradeMouseUpOrLeave,
 }) => {
+  // Chamada do hook useProductGrade AQUI, dentro de ProductInfo
+  // Ele gerencia o estado e os handlers das grades
+  const {
+    options: productGradeOptions, // Renomeado para evitar conflito com 'options' interno
+    selectedOptions: productGradeSelectedOptions, // Renomeado
+    onOptionSelect: onProductGradeOptionSelect, // Renomeado
+    handleMouseDown: handleProductGradeMouseDown,
+    handleMouseMove: handleProductGradeMouseMove,
+    handleMouseUpOrLeave: handleProductGradeMouseUpOrLeave,
+    scrollContainerRefs, // A ref gerada por useProductGrade
+  } = useProductGrade({
+    grades: products.grade || [], // Passa as grades do produto
+    onColorSelect: handleColorSelect, // Passa o handler de cor do ProductPage
+    onSizeSelect: handleSizeSelect, // Passa o handler de tamanho do ProductPage
+    selectedColorFromParent: selectedColor, // Sincroniza com o estado do pai
+    selectedSizeFromParent: selectedSize, // Sincroniza com o estado do pai
+    product: products, // Pode ser útil passar o produto inteiro, ou apenas grades
+  });
+
   return (
     <div className="flex flex-col p-4">
       <div>
@@ -91,6 +97,7 @@ export const ProductInfo: React.FC<ProductInfoProps> = ({
           handleMouseDown={handleProductGradeMouseDown}
           handleMouseMove={handleProductGradeMouseMove}
           handleMouseUpOrLeave={handleProductGradeMouseUpOrLeave}
+          scrollContainerRefs={scrollContainerRefs} // Passa a ref gerada pelo useProductGrade
         />
       )}
 

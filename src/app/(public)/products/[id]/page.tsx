@@ -1,14 +1,12 @@
 // src/app/(public)/products/[id]/page.tsx
-"use client"; // Marcar como Client Component.
+"use client";
 
-import { useProductPage } from "./useProductPage"; // Importa o hook de lógica
-import { Loader2 } from "lucide-react"; // Para o loader
-import React from "react"; // Necessário para JSX
+import { useProductPage } from "./useProductPage";
+import { Loader2 } from "lucide-react";
+import React from "react";
 import { ProductPageUI } from "./ProductPageUI";
 
-// Este é o COMPONENTE DE PÁGINA que o Next.js espera como default export.
 export default function ProductPage() {
-  // Obtém TODOS os estados e funções do hook useProductPage.
   const {
     products,
     quantity,
@@ -30,15 +28,10 @@ export default function ProductPage() {
     onZipCodeChange,
     onCalculateShipping,
     isFetchingProduct,
-    productGradeOptions,
-    productGradeSelectedOptions,
-    onProductGradeOptionSelect,
-    handleProductGradeMouseDown,
-    handleProductGradeMouseMove,
-    handleProductGradeMouseUpOrLeave,
-  } = useProductPage(); // <-- CHAMA O HOOK DE LÓGICA AQUI
+    // REMOVIDO: productGradeOptions, productGradeSelectedOptions, etc.
+    // Eles agora são internos ao ProductInfo (via useProductGrade).
+  } = useProductPage();
 
-  // Lógica de carregamento da página (exibindo um loader)
   if (isFetchingProduct) {
     return (
       <div className="flex justify-center items-center h-screen">
@@ -48,8 +41,6 @@ export default function ProductPage() {
     );
   }
 
-  // Renderiza a UI principal da página do produto (ProductPageUI)
-  // APENAS se o produto estiver carregado.
   return (
     <>
       {products ? (
@@ -58,7 +49,7 @@ export default function ProductPage() {
           onAddCart={onAddCart}
           quantity={quantity}
           quantityChange={quantityChange}
-          user={loggedInUser} // Passa loggedInUser (UserProfile | AuthUser | null)
+          user={loggedInUser}
           shippingCost={shippingCost}
           selectedImage={selectedImage}
           selectedColor={selectedColor}
@@ -73,15 +64,9 @@ export default function ProductPage() {
           onCalculateShipping={onCalculateShipping}
           isCalculatingShipping={isCalculatingShipping}
           isAddingToCart={isAddingToCart}
-          productGradeOptions={productGradeOptions}
-          productGradeSelectedOptions={productGradeSelectedOptions}
-          onProductGradeOptionSelect={onProductGradeOptionSelect}
-          handleProductGradeMouseDown={handleProductGradeMouseDown}
-          handleProductGradeMouseMove={handleProductGradeMouseMove}
-          handleProductGradeMouseUpOrLeave={handleProductGradeMouseUpOrLeave}
+          // REMOVIDO: as props relacionadas à grade que eram passadas antes
         />
       ) : (
-        // Se o produto não for encontrado após o carregamento (ex: ID inválido, erro 404 da API)
         <div className="flex justify-center items-center h-screen text-red-500 text-lg">
           <p>Produto não encontrado ou ocorreu um erro ao carregar.</p>
         </div>

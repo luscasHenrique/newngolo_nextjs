@@ -1,17 +1,22 @@
 // src/app/(public)/products/_components/productGrade/ProductGradeUI.tsx
 "use client";
 
-import React, { useRef } from "react";
+import React from "react"; // Removido useRef daqui, pois a ref vem das props
 import { env } from "@/config/env";
-import { SelectedOption } from "./useProductGrade";
+import { SelectedOption } from "./useProductGrade"; // Tipos da interface
 
 interface ProductGradeUIProps {
   options: Record<string, SelectedOption[]>;
   selectedOptions: Record<string, SelectedOption>;
   onOptionSelect: (category: string, option: SelectedOption) => void;
+  // Recebe os handlers e a ref diretamente do hook useProductGrade
   handleMouseDown: (e: React.MouseEvent, category: string) => void;
   handleMouseMove: (e: React.MouseEvent, category: string) => void;
   handleMouseUpOrLeave: (category: string) => void;
+  scrollContainerRefs: React.MutableRefObject<
+    // Tipo da ref que vem das props
+    Record<string, HTMLDivElement | null>
+  >;
 }
 
 const ProductGradeUI: React.FC<ProductGradeUIProps> = ({
@@ -21,9 +26,8 @@ const ProductGradeUI: React.FC<ProductGradeUIProps> = ({
   handleMouseDown,
   handleMouseMove,
   handleMouseUpOrLeave,
+  scrollContainerRefs, // Desestruturando a ref recebida
 }) => {
-  const scrollContainerRefs = useRef<Record<string, HTMLDivElement | null>>({});
-
   return (
     <div className="p-4">
       {Object.keys(options).map((category) => (
@@ -38,10 +42,12 @@ const ProductGradeUI: React.FC<ProductGradeUIProps> = ({
           </h3>
           <div
             className="flex gap-4 overflow-x-auto whitespace-nowrap cursor-grab p-1"
-            // AQUI ESTÁ A CORREÇÃO FINAL: Use uma função de bloco explícito.
             ref={(el) => {
-              scrollContainerRefs.current[category] = el;
-            }} // <-- MUDANÇA AQUI
+              // Verifica se scrollContainerRefs e scrollContainerRefs.current existem
+              if (scrollContainerRefs && scrollContainerRefs.current) {
+                scrollContainerRefs.current[category] = el;
+              }
+            }}
             onMouseDown={(e) => handleMouseDown(e, category)}
             onMouseMove={(e) => handleMouseMove(e, category)}
             onMouseUp={() => handleMouseUpOrLeave(category)}

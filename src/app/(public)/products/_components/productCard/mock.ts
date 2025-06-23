@@ -29,6 +29,29 @@ export const productsMock: Product[] = [
           "https://images.unsplash.com/photo-1546868871-7041f2a55e12?q=80&w=1964&auto=format&fit=crop",
         gradeSizes: [
           { id: "size-unica", size: "UNICO", price: { price: 799.9 } },
+          { id: "size-unica2", size: "UNICO2", price: { price: 799.9 } },
+        ],
+      },
+      {
+        id: "color-white",
+        name: "Cor",
+        color: "Branco",
+        image:
+          "https://images.unsplash.com/photo-1546868871-7041f2a55e12?q=80&w=1964&auto=format&fit=crop",
+        gradeSizes: [
+          { id: "size-unica", size: "UNICO", price: { price: 799.9 } },
+          { id: "size-unica2", size: "UNICO2", price: { price: 799.9 } },
+        ],
+      },
+      {
+        id: "color-blue",
+        name: "Cor",
+        color: "Azul",
+        image:
+          "https://images.unsplash.com/photo-1546868871-7041f2a55e12?q=80&w=1964&auto=format&fit=crop",
+        gradeSizes: [
+          { id: "size-unica", size: "UNICO", price: { price: 799.9 } },
+          { id: "size-unica2", size: "UNICO2", price: { price: 799.9 } },
         ],
       },
     ],
@@ -52,7 +75,19 @@ export const productsMock: Product[] = [
       "https://images.unsplash.com/photo-1554048612-b6a482bc67e5?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OHx8QyVDMyVBMm1lcmElMjBEU0xSJTIwRU9TfGVufDB8fDB8fHww",
       "https://images.unsplash.com/photo-1533246860975-b290a87773d3?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8QyVDMyVBMm1lcmElMjBEU0xSJTIwRU9TfGVufDB8fDB8fHww", // Outra imagem, URL completa
     ],
-    grade: [],
+    grade: [
+      {
+        id: "color-black",
+        name: "Cor",
+        color: "Preto",
+        image:
+          "https://images.unsplash.com/photo-1546868871-7041f2a55e12?q=80&w=1964&auto=format&fit=crop",
+        gradeSizes: [
+          { id: "size-unica", size: "UNICO", price: { price: 799.9 } },
+          { id: "size-unica2", size: "UNICO2", price: { price: 799.9 } },
+        ],
+      },
+    ],
     seller: { city: "Rio de Janeiro" },
     dimensions: { height: "20", width: "15", depth: "10", weight: "1.5" },
     review: [],

@@ -9,7 +9,7 @@ import {
   SelectedColorState,
   SelectedSizeState,
   SelectedOption,
-} from "../_components/productGrade/useProductGrade";
+} from "../_components/productGrade/useProductGrade"; // Mantém os tipos
 import {
   getProductById,
   addProductToCart,
@@ -24,13 +24,13 @@ import {
 } from "@/types/product/cart";
 import { Grade } from "@/types/product/grade";
 import { Address } from "@/model/Address";
-import { AuthUser } from "@/model/AuthUser"; // ADICIONADO: Importar AuthUser
+import { AuthUser } from "@/model/AuthUser";
 import { getUserProfile } from "@/services/userService";
 import { toCurrency } from "@/helpers/currency/toCurrency";
 
 interface ProductPageParams {
   id: string;
-  [key: string]: string; // Assinatura de índice para useParams
+  [key: string]: string;
 }
 
 export function useProductPage() {
@@ -60,20 +60,16 @@ export function useProductPage() {
   const [isCalculatingShipping, setIsCalculatingShipping] =
     useState<boolean>(false);
 
-  const [productGradeOptions, setProductGradeOptions] = useState<
-    Record<string, SelectedOption[]>
-  >({});
-  const [productGradeSelectedOptions, setProductGradeSelectedOptions] =
-    useState<Record<string, SelectedOption>>({});
-  const [productGradeFilteredOptions, setProductGradeFilteredOptions] =
-    useState<Record<string, SelectedOption[]>>({});
-  const scrollContainerRefs = useRef<Record<string, HTMLDivElement | null>>({});
+  // REMOVIDO: Estados e refs relacionados diretamente à grade
+  // const [productGradeOptions, setProductGradeOptions] = useState<Record<string, SelectedOption[]>>({});
+  // const [productGradeSelectedOptions, setProductGradeSelectedOptions] = useState<Record<string, SelectedOption>>({});
+  // const [productGradeFilteredOptions, setProductGradeFilteredOptions] = useState<Record<string, SelectedOption[]>>({});
+  // const scrollContainerRefs = useRef<Record<string, HTMLDivElement | null>>({});
 
   const loggedInUser: UserProfile | AuthUser | null =
     userProfile || sessionUser;
   const userLoading = sessionLoading || isUserProfileLoading;
 
-  // FUNÇÕES DE CALLBACK DECLARADAS PRIMEIRO (para resolver "usada antes da declaração")
   const handleColorSelect = useCallback(
     (color?: string, image?: string, id?: string) => {
       if (color && id) {
@@ -95,101 +91,8 @@ export function useProductPage() {
     setQuantity((prev) => Math.max(1, prev + (increment ? 1 : -1)));
   }, []);
 
-  const transformGradesToOptions = useCallback((grades: Grade[]) => {
-    const newOptions: Record<string, SelectedOption[]> = {};
-    grades.forEach((grade) => {
-      const category = grade.name || "Cor";
-      if (!newOptions[category]) {
-        newOptions[category] = [];
-      }
-      newOptions[category].push({
-        id: grade.id || "",
-        name: grade.color || "ÚNICO",
-        image: grade.image || undefined,
-      });
-    });
-    return newOptions;
-  }, []);
-
-  const filterProductGradeOptions = useCallback(
-    (
-      currentSelectedCategory: string,
-      currentSelectedOption: SelectedOption
-    ) => {
-      const newFilteredOptions: Record<string, SelectedOption[]> = {
-        ...productGradeOptions,
-      };
-      if (currentSelectedCategory === "Cor" && currentSelectedOption.id) {
-        const selectedGrade = (products?.grade || []).find(
-          (grade) => grade.id === currentSelectedOption.id
-        );
-        if (selectedGrade && selectedGrade.gradeSizes) {
-          newFilteredOptions["Tamanho"] = selectedGrade.gradeSizes.map(
-            (size) => ({
-              id: size.id || "",
-              name: size.size,
-            })
-          );
-        } else {
-          newFilteredOptions["Tamanho"] = [];
-        }
-      }
-      setProductGradeFilteredOptions(newFilteredOptions);
-    },
-    [products, productGradeOptions]
-  );
-
-  const handleProductGradeOptionSelect = useCallback(
-    (category: string, option: SelectedOption) => {
-      setProductGradeSelectedOptions((prev) => ({
-        ...prev,
-        [category]: option,
-      }));
-
-      if (category === "Cor") {
-        handleColorSelect(option.name, option.image, option.id);
-        handleSizeSelect("", ""); // Limpa o tamanho selecionado ao mudar a cor
-      } else if (category === "Tamanho") {
-        handleSizeSelect(option.name, option.id);
-      }
-
-      filterProductGradeOptions(category, option);
-    },
-    [handleColorSelect, handleSizeSelect, filterProductGradeOptions]
-  );
-
-  const handleProductGradeMouseDown = useCallback(
-    (e: React.MouseEvent, category: string) => {
-      const container = scrollContainerRefs.current[category];
-      if (!container) return;
-      container.dataset.isDragging = "true";
-      container.dataset.startX = `${e.pageX - container.offsetLeft}`;
-      container.dataset.scrollLeft = `${container.scrollLeft}`;
-      container.style.cursor = "grabbing";
-    },
-    []
-  );
-
-  const handleProductGradeMouseMove = useCallback(
-    (e: React.MouseEvent, category: string) => {
-      const container = scrollContainerRefs.current[category];
-      if (!container || container.dataset.isDragging !== "true") return;
-      e.preventDefault();
-      const startX = parseFloat(container.dataset.startX || "0");
-      const scrollLeft = parseFloat(container.dataset.scrollLeft || "0");
-      const x = e.pageX - container.offsetLeft;
-      container.scrollLeft = scrollLeft - (x - startX);
-    },
-    []
-  );
-
-  const handleProductGradeMouseUpOrLeave = useCallback((category: string) => {
-    const container = scrollContainerRefs.current[category];
-    if (container) {
-      container.dataset.isDragging = "false";
-      container.style.cursor = "grab";
-    }
-  }, []);
+  // REMOVIDO: Funções de manipulação da lógica de grade (transform, filter, select)
+  // REMOVIDO: Funções de manipulação de mouse/scroll da grade
 
   const handleMouseMove = useCallback(
     (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
@@ -218,18 +121,8 @@ export function useProductPage() {
           setSelectedImage(data.imagens[0]);
         }
         if (data.grade && data.grade.length > 0) {
-          const initialGradeOptions = transformGradesToOptions(data.grade);
-          setProductGradeOptions(initialGradeOptions);
-          setProductGradeFilteredOptions(initialGradeOptions);
           const firstColorGrade = data.grade[0];
           if (firstColorGrade) {
-            setProductGradeSelectedOptions({
-              Cor: {
-                id: firstColorGrade.id || "",
-                name: firstColorGrade.color || "ÚNICO",
-                image: firstColorGrade.image,
-              },
-            });
             handleColorSelect(
               firstColorGrade.color,
               firstColorGrade.image,
@@ -245,7 +138,7 @@ export function useProductPage() {
         setIsFetchingProduct(false);
       }
     },
-    [handleColorSelect, transformGradesToOptions]
+    [handleColorSelect]
   );
 
   const getPrice = useCallback(
@@ -280,7 +173,6 @@ export function useProductPage() {
       );
       return;
     }
-    // Type guard para garantir que loggedInUser é UserProfile antes de acessar address
     if (
       !loggedInUser ||
       !loggedInUser.id ||
@@ -415,16 +307,13 @@ export function useProductPage() {
     }
   }, [zipCode, products, notify, toCurrency]);
 
-  // Efeito para carregar o produto quando o ID da URL muda
   useEffect(() => {
     if (productId) {
       getProduct(productId);
     }
   }, [productId, getProduct]);
 
-  // Efeito para preencher o CEP inicial do usuário e calcular frete (se aplicável)
   useEffect(() => {
-    // Certifique-se de que products esteja carregado, userLoading não, loggedInUser existe e tenha 'address'
     if (
       products &&
       !userLoading &&
@@ -446,12 +335,10 @@ export function useProductPage() {
           notify.info("Adicione seu endereço para calcular o frete.");
         }
       } else {
-        // Usuário logado, mas sem endereço cadastrado
         setShippingCost("Adicione seu endereço para calcular o frete.");
         notify.info("Adicione seu endereço para calcular o frete.");
       }
     } else if (products && !userLoading && !loggedInUser) {
-      // Produto carregado, userLoading falso, e não há usuário logado
       setShippingCost("Faça login para calcular o frete.");
       notify.info("Faça login para calcular o frete.");
     }
@@ -460,7 +347,7 @@ export function useProductPage() {
   return {
     products,
     quantity,
-    loggedInUser: loggedInUser as UserProfile, // Passa o usuário para a UI como UserProfile
+    loggedInUser: loggedInUser as UserProfile,
     shippingCost,
     selectedImage,
     selectedColor,
@@ -478,11 +365,5 @@ export function useProductPage() {
     onZipCodeChange: setZipCode,
     onCalculateShipping: handleCalculateShipping,
     isFetchingProduct,
-    productGradeOptions: productGradeFilteredOptions,
-    productGradeSelectedOptions: productGradeSelectedOptions,
-    onProductGradeOptionSelect: handleProductGradeOptionSelect,
-    handleProductGradeMouseDown: handleProductGradeMouseDown,
-    handleProductGradeMouseMove: handleProductGradeMouseMove,
-    handleProductGradeMouseUpOrLeave: handleProductGradeMouseUpOrLeave,
   };
 }

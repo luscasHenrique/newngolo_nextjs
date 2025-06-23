@@ -1,9 +1,9 @@
 // src/app/(public)/products/_components/productGrade/useProductGrade.ts
 "use client";
 
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useCallback } from "react"; // Adicionado useCallback
 import { Grade } from "@/types/product/grade";
-import { Product } from "@/types/product/product";
+import { Product } from "@/types/product/product"; // Mantido se Product for usado para extrair grades ou algo assim
 
 export interface SelectedOption {
   id: string;
@@ -23,20 +23,23 @@ export interface SelectedSizeState {
 
 interface UseProductGradeProps {
   grades: Grade[];
+  // Essas funções serão callbacks do useProductPage para atualizar o estado central
   onColorSelect: (color?: string, image?: string, id?: string) => void;
   onSizeSelect: (size: string, id: string) => void;
-  selectedColor: SelectedColorState;
-  selectedSize: SelectedSizeState;
-  product: Product;
+  // Apenas para inicialização e filtros, o estado real de seleção vem do useProductPage
+  selectedColorFromParent: SelectedColorState;
+  selectedSizeFromParent: SelectedSizeState;
+  // 'product' pode ser opcional ou não ser necessário aqui se apenas 'grades' for o suficiente
+  product?: Product; // Tornando opcional, pois talvez não seja diretamente usado para a lógica de grade em si
 }
 
 export function useProductGrade({
   grades,
   onColorSelect,
   onSizeSelect,
-  selectedColor,
-  selectedSize,
-  product,
+  selectedColorFromParent,
+  selectedSizeFromParent,
+  product, // Mantido apenas para compatibilidade, se não for usado, pode remover
 }: UseProductGradeProps) {
   const [options, setOptions] = useState<Record<string, SelectedOption[]>>({});
   const [selectedOptions, setSelectedOptions] = useState<
@@ -46,11 +49,12 @@ export function useProductGrade({
     Record<string, SelectedOption[]>
   >({});
 
+  // AGORA, a ref e os handlers de mouse/scroll SÓ EXISTEM AQUI
   const scrollContainerRefs = useRef<Record<string, HTMLDivElement | null>>({});
 
-  const transformGradesToOptions = (grades: Grade[]) => {
+  const transformGradesToOptions = useCallback((gradesArray: Grade[]) => {
     const newOptions: Record<string, SelectedOption[]> = {};
-    grades.forEach((grade) => {
+    gradesArray.forEach((grade) => {
       const category = grade.name || "Cor";
       if (!newOptions[category]) {
         newOptions[category] = [];
@@ -62,94 +66,155 @@ export function useProductGrade({
       });
     });
     return newOptions;
-  };
+  }, []);
 
+  // UseEffect para inicializar as opções e a seleção inicial da cor
   useEffect(() => {
     if (grades && grades.length > 0) {
       const initialOptions = transformGradesToOptions(grades);
       setOptions(initialOptions);
       setFilteredOptions(initialOptions);
-      const firstColorGrade = grades[0];
-      if (firstColorGrade) {
-        setSelectedOptions({
-          Cor: {
-            id: firstColorGrade.id || "",
-            name: firstColorGrade.color || "ÚNICO",
-            image: firstColorGrade.image,
-          },
-        });
-        onColorSelect(
-          firstColorGrade.color,
-          firstColorGrade.image,
-          firstColorGrade.id
+
+      // Sincroniza a seleção interna do hook com a prop recebida do pai
+      if (selectedColorFromParent && selectedColorFromParent.id) {
+        const initialSelectedColorOption = initialOptions["Cor"]?.find(
+          (opt) => opt.id === selectedColorFromParent.id
         );
+        if (initialSelectedColorOption) {
+          setSelectedOptions((prev) => ({
+            ...prev,
+            Cor: initialSelectedColorOption,
+          }));
+          // Aplica o filtro de tamanho com base na cor inicial selecionada
+          const selectedGrade = grades.find(
+            (g) => g.id === selectedColorFromParent.id
+          );
+          if (selectedGrade && selectedGrade.gradeSizes) {
+            setFilteredOptions((prev) => ({
+              ...prev,
+              Tamanho: selectedGrade.gradeSizes.map((size) => ({
+                id: size.id || "",
+                name: size.size,
+              })),
+            }));
+          } else {
+            setFilteredOptions((prev) => ({ ...prev, Tamanho: [] }));
+          }
+        }
+      }
+      if (selectedSizeFromParent && selectedSizeFromParent.id) {
+        const initialSelectedSizeOption = (
+          (grades.find((g) => g.id === selectedColorFromParent?.id) || {})
+            .gradeSizes || []
+        ).find((size) => size.id === selectedSizeFromParent.id);
+
+        if (initialSelectedSizeOption) {
+          setSelectedOptions((prev) => ({
+            ...prev,
+            Tamanho: {
+              id: initialSelectedSizeOption.id || "",
+              name: initialSelectedSizeOption.size,
+            },
+          }));
+        }
       }
     }
-  }, [grades]);
+  }, [
+    grades,
+    transformGradesToOptions,
+    selectedColorFromParent,
+    selectedSizeFromParent,
+  ]);
 
-  const filterOptions = (
-    currentSelectedCategory: string,
-    currentSelectedOption: SelectedOption
-  ) => {
-    const newFilteredOptions: Record<string, SelectedOption[]> = { ...options };
+  const filterOptions = useCallback(
+    (
+      currentSelectedCategory: string,
+      currentSelectedOption: SelectedOption,
+      currentSelectedOptionsState: Record<string, SelectedOption> // Passar o estado atualizado
+    ) => {
+      const newFilteredOptions: Record<string, SelectedOption[]> = {
+        ...options,
+      };
 
-    if (currentSelectedCategory === "Cor" && currentSelectedOption.id) {
-      const selectedGrade = grades.find(
-        (grade) => grade.id === currentSelectedOption.id
-      );
-      if (selectedGrade && selectedGrade.gradeSizes) {
-        newFilteredOptions["Tamanho"] = selectedGrade.gradeSizes.map(
-          (size) => ({
-            id: size.id || "",
-            name: size.size,
-          })
+      if (currentSelectedCategory === "Cor" && currentSelectedOption.id) {
+        const selectedGrade = grades.find(
+          (grade) => grade.id === currentSelectedOption.id
         );
-      } else {
-        newFilteredOptions["Tamanho"] = [];
+        if (selectedGrade && selectedGrade.gradeSizes) {
+          newFilteredOptions["Tamanho"] = selectedGrade.gradeSizes.map(
+            (size) => ({
+              id: size.id || "",
+              name: size.size,
+            })
+          );
+        } else {
+          newFilteredOptions["Tamanho"] = [];
+        }
+        // Se a cor mudou, limpa a seleção de tamanho
+        if (currentSelectedOptionsState["Tamanho"]) {
+          setSelectedOptions((prev) => ({
+            ...prev,
+            Tamanho: {} as SelectedOption,
+          }));
+          onSizeSelect("", ""); // Notifica o pai para limpar o tamanho também
+        }
       }
-    }
-    setFilteredOptions(newFilteredOptions);
-  };
+      setFilteredOptions(newFilteredOptions);
+    },
+    [grades, options, onSizeSelect]
+  );
 
-  const handleOptionSelect = (category: string, option: SelectedOption) => {
-    setSelectedOptions((prev) => ({ ...prev, [category]: option }));
+  const handleOptionSelect = useCallback(
+    (category: string, option: SelectedOption) => {
+      setSelectedOptions((prev) => {
+        const newState = { ...prev, [category]: option };
+        filterOptions(category, option, newState); // Passa o novo estado
+        return newState;
+      });
 
-    if (category === "Cor") {
-      onColorSelect(option.name, option.image, option.id);
-      onSizeSelect("", "");
-    } else if (category === "Tamanho") {
-      onSizeSelect(option.name, option.id);
-    }
+      // Notifica o hook pai sobre a seleção
+      if (category === "Cor") {
+        onColorSelect(option.name, option.image, option.id);
+        onSizeSelect("", ""); // Sempre limpa o tamanho no pai ao mudar a cor
+      } else if (category === "Tamanho") {
+        onSizeSelect(option.name, option.id);
+      }
+    },
+    [onColorSelect, onSizeSelect, filterOptions]
+  );
 
-    filterOptions(category, option);
-  };
+  const handleMouseDown = useCallback(
+    (e: React.MouseEvent, category: string) => {
+      const container = scrollContainerRefs.current[category];
+      if (!container) return;
+      container.dataset.isDragging = "true";
+      container.dataset.startX = `${e.pageX - container.offsetLeft}`;
+      container.dataset.scrollLeft = `${container.scrollLeft}`;
+      container.style.cursor = "grabbing";
+    },
+    []
+  );
 
-  const handleMouseDown = (e: React.MouseEvent, category: string) => {
-    const container = scrollContainerRefs.current[category];
-    if (!container) return;
-    container.dataset.isDragging = "true";
-    container.dataset.startX = `${e.pageX - container.offsetLeft}`;
-    container.dataset.scrollLeft = `${container.scrollLeft}`;
-    container.style.cursor = "grabbing";
-  };
+  const handleMouseMove = useCallback(
+    (e: React.MouseEvent, category: string) => {
+      const container = scrollContainerRefs.current[category];
+      if (!container || container.dataset.isDragging !== "true") return;
+      e.preventDefault();
+      const startX = parseFloat(container.dataset.startX || "0");
+      const scrollLeft = parseFloat(container.dataset.scrollLeft || "0");
+      const x = e.pageX - container.offsetLeft;
+      container.scrollLeft = scrollLeft - (x - startX);
+    },
+    []
+  );
 
-  const handleMouseMove = (e: React.MouseEvent, category: string) => {
-    const container = scrollContainerRefs.current[category];
-    if (!container || container.dataset.isDragging !== "true") return;
-    e.preventDefault();
-    const startX = parseFloat(container.dataset.startX || "0");
-    const scrollLeft = parseFloat(container.dataset.scrollLeft || "0");
-    const x = e.pageX - container.offsetLeft;
-    container.scrollLeft = scrollLeft - (x - startX);
-  };
-
-  const handleMouseUpOrLeave = (category: string) => {
+  const handleMouseUpOrLeave = useCallback((category: string) => {
     const container = scrollContainerRefs.current[category];
     if (container) {
       container.dataset.isDragging = "false";
       container.style.cursor = "grab";
     }
-  };
+  }, []);
 
   return {
     options: filteredOptions,
@@ -158,5 +223,6 @@ export function useProductGrade({
     handleMouseDown,
     handleMouseMove,
     handleMouseUpOrLeave,
+    scrollContainerRefs, // Retorna a ref para o componente UI
   };
 }

@@ -1,56 +1,47 @@
 // src/app/(public)/products/[id]/ProductPageUI.tsx
-"use client"; // Marca este componente como Client Component.
+"use client";
 
 import React from "react";
-import { Product } from "@/types/product/product"; // Interface para o produto.
-import { UserProfile } from "@/model/UserProfile"; // Interface para o perfil completo do usuário.
-// Tipos de seleção de cor e tamanho para o componente de grade.
+import { Product } from "@/types/product/product";
+import { UserProfile } from "@/model/UserProfile";
 import {
   SelectedColorState,
   SelectedSizeState,
   SelectedOption,
 } from "../_components/productGrade/useProductGrade";
 
-// Componentes de UI importados.
-// Certifique-se de que os caminhos de importação estão corretos em relação a este arquivo.
-import { ProductInfo } from "../_components/productInfo/ProductInfo"; // Componente UI ProductInfo.
-import { ProductSlider } from "../_components/productSlider/ProductSlider"; // Componente UI ProductSlider.
-import { ProductReviewList } from "../_components/productReviewList/ProductReviewList"; // Componente ProductReviewList.
+import { ProductInfo } from "../_components/productInfo/ProductInfo";
+import { ProductSlider } from "../_components/productSlider/ProductSlider";
+import { ProductReviewList } from "../_components/productReviewList/ProductReviewList";
 
-// Interface que define todas as props que ProductPageUI espera receber do seu hook (useProductPage.ts).
 interface ProductPageUIProps {
-  products: Product; // Dados do produto.
-  quantity: number; // Quantidade selecionada do produto.
-  user: UserProfile | null; // Dados do usuário logado (pode ser null se não logado).
-  shippingCost: string | null; // Custo do frete formatado.
-  selectedImage: string; // URL da imagem atualmente destacada no slider.
-  selectedColor: SelectedColorState; // Cor selecionada.
-  selectedSize: SelectedSizeState; // Tamanho selecionado.
-  zoomStyle: React.CSSProperties; // Estilos para a funcionalidade de zoom na imagem.
-  zipCode: string; // CEP digitado para cálculo de frete.
-  isCalculatingShipping: boolean; // Estado de carregamento do cálculo de frete.
-  isAddingToCart: boolean; // Estado de carregamento da adição ao carrinho.
+  products: Product;
+  quantity: number;
+  user: UserProfile | null;
+  shippingCost: string | null;
+  selectedImage: string;
+  selectedColor: SelectedColorState;
+  selectedSize: SelectedSizeState;
+  zoomStyle: React.CSSProperties;
+  zipCode: string;
+  isCalculatingShipping: boolean;
+  isAddingToCart: boolean;
+  // REMOVIDO: props de grade daqui, pois ProductInfo agora gerencia isso
+  // productGradeOptions: Record<string, SelectedOption[]>;
+  // productGradeSelectedOptions: Record<string, SelectedOption>;
+  // onProductGradeOptionSelect: (category: string, option: SelectedOption) => void;
+  // handleProductGradeMouseDown: (e: React.MouseEvent, category: string) => void;
+  // handleProductGradeMouseMove: (e: React.MouseEvent, category: string) => void;
+  // handleProductGradeMouseUpOrLeave: (category: string) => void;
 
-  // Funções de callback para eventos do usuário.
-  onAddCart: () => void; // Função para adicionar ao carrinho.
-  quantityChange: (increment: boolean) => void; // Função para mudar a quantidade.
-  handleColorSelect: (color?: string, image?: string, id?: string) => void; // Função para selecionar cor/imagem.
-  handleSizeSelect: (size: string, id: string) => void; // Função para selecionar tamanho.
-  handleMouseMove: (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => void; // Função de mouse move para zoom.
-  handleMouseLeave: () => void; // Função de mouse leave para zoom.
-  onZipCodeChange: (value: string) => void; // Função para mudar o CEP.
-  onCalculateShipping: () => void; // Função para calcular frete.
-
-  // Props ESPECÍFICAS para o componente ProductGradeUI.
-  productGradeOptions: Record<string, SelectedOption[]>; // Opções de grade filtradas.
-  productGradeSelectedOptions: Record<string, SelectedOption>; // Opções de grade selecionadas.
-  onProductGradeOptionSelect: (
-    category: string,
-    option: SelectedOption
-  ) => void; // Callback de seleção de grade.
-  handleProductGradeMouseDown: (e: React.MouseEvent, category: string) => void; // Evento de mouse down para drag-scroll.
-  handleProductGradeMouseMove: (e: React.MouseEvent, category: string) => void; // Evento de mouse move para drag-scroll.
-  handleProductGradeMouseUpOrLeave: (category: string) => void; // Evento de mouse up/leave para drag-scroll.
+  onAddCart: () => void;
+  quantityChange: (increment: boolean) => void;
+  handleColorSelect: (color?: string, image?: string, id?: string) => void;
+  handleSizeSelect: (size: string, id: string) => void;
+  handleMouseMove: (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
+  handleMouseLeave: () => void;
+  onZipCodeChange: (value: string) => void;
+  onCalculateShipping: () => void;
 }
 
 export const ProductPageUI: React.FC<ProductPageUIProps> = ({
@@ -73,17 +64,16 @@ export const ProductPageUI: React.FC<ProductPageUIProps> = ({
   handleMouseLeave,
   onZipCodeChange,
   onCalculateShipping,
-  // Desestruturar as props da grade que virão do useProductPage.ts
-  productGradeOptions,
-  productGradeSelectedOptions,
-  onProductGradeOptionSelect,
-  handleProductGradeMouseDown,
-  handleProductGradeMouseMove,
-  handleProductGradeMouseUpOrLeave,
+  // REMOVIDO: desestruturação das props de grade aqui
+  // productGradeOptions,
+  // productGradeSelectedOptions,
+  // onProductGradeOptionSelect,
+  // handleProductGradeMouseDown,
+  // handleProductGradeMouseMove,
+  // handleProductGradeMouseUpOrLeave,
 }) => {
   return (
-    <div className="flex flex-wrap w-full   bg-white  rounded-lg shadow-sm">
-      {/* Imagem Principal do Produto (para telas mobile e tablet) */}
+    <div className="flex flex-wrap w-full bg-white rounded-lg shadow-sm">
       <div className="w-full md:h-[500px] lg:hidden lg:flex-none">
         <ProductSlider
           imagens={products.imagens}
@@ -95,14 +85,13 @@ export const ProductPageUI: React.FC<ProductPageUIProps> = ({
         />
       </div>
 
-      {/* Informações do Produto (para telas mobile e tablet) */}
       <div className="w-full lg:hidden lg:flex-none">
         <ProductInfo
           products={products}
           onAddCart={onAddCart}
           quantity={quantity}
           quantityChange={quantityChange}
-          user={user} // Passa o user (UserProfile | null)
+          user={user}
           shippingCost={shippingCost}
           selectedColor={selectedColor}
           selectedSize={selectedSize}
@@ -112,19 +101,11 @@ export const ProductPageUI: React.FC<ProductPageUIProps> = ({
           onZipCodeChange={onZipCodeChange}
           onCalculateShipping={onCalculateShipping}
           isCalculatingShipping={isCalculatingShipping}
-          // isAddingToCart={isAddingToCart} // Não passar, addCart já tem o estado interno.
-
-          // Passa as props da grade para ProductInfo, que as repassará para ProductGradeUI.
-          productGradeOptions={productGradeOptions}
-          productGradeSelectedOptions={productGradeSelectedOptions}
-          onProductGradeOptionSelect={onProductGradeOptionSelect}
-          handleProductGradeMouseDown={handleProductGradeMouseDown}
-          handleProductGradeMouseMove={handleProductGradeMouseMove}
-          handleProductGradeMouseUpOrLeave={handleProductGradeMouseUpOrLeave}
+          // As props relacionadas à grade não são mais passadas para ProductInfo a partir daqui.
+          // ProductInfo chamará o useProductGrade internamente.
         />
       </div>
 
-      {/* Layout para Desktop (Imagens e Informações lado a lado) */}
       <div className="hidden flex-none lg:grid w-full lg:grid-cols-[55%_45%] gap-2">
         <div className="w-full">
           <ProductSlider
@@ -152,27 +133,17 @@ export const ProductPageUI: React.FC<ProductPageUIProps> = ({
             onZipCodeChange={onZipCodeChange}
             onCalculateShipping={onCalculateShipping}
             isCalculatingShipping={isCalculatingShipping}
-            // isAddingToCart={isAddingToCart} // Comentado.
-
-            // Passa as props da grade para ProductInfo.
-            productGradeOptions={productGradeOptions}
-            productGradeSelectedOptions={productGradeSelectedOptions}
-            onProductGradeOptionSelect={onProductGradeOptionSelect}
-            handleProductGradeMouseDown={handleProductGradeMouseDown}
-            handleProductGradeMouseMove={handleProductGradeMouseMove}
-            handleProductGradeMouseUpOrLeave={handleProductGradeMouseUpOrLeave}
+            // As props relacionadas à grade não são mais passadas para ProductInfo a partir daqui.
           />
         </div>
       </div>
 
-      {/* Seção de Descrição e Avaliações do Produto */}
       <div className="w-full gap-4 p-4">
         <div>
           <hr className="border-t-2 border-gray-300 my-4" />
           <h1 className="text-lg font-bold mb-2 mt-4">{products.name}</h1>
         </div>
         <div className="text-gray-700 rounded-md">{products.description}</div>
-        {/* Renderiza a lista de avaliações se houver, senão uma mensagem padrão. */}
         {products.review && products.review.length > 0 ? (
           <ProductReviewList reviews={products.review} />
         ) : (
