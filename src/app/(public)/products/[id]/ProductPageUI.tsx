@@ -82,7 +82,7 @@ export const ProductPageUI: React.FC<ProductPageUIProps> = ({
   handleProductGradeMouseUpOrLeave,
 }) => {
   return (
-    <div className="flex flex-wrap w-full container  bg-white  rounded-lg shadow-sm">
+    <div className="flex flex-wrap w-full   bg-white  rounded-lg shadow-sm">
       {/* Imagem Principal do Produto (para telas mobile e tablet) */}
       <div className="w-full md:h-[500px] lg:hidden lg:flex-none">
         <ProductSlider
@@ -166,7 +166,7 @@ export const ProductPageUI: React.FC<ProductPageUIProps> = ({
       </div>
 
       {/* Seção de Descrição e Avaliações do Produto */}
-      <div className="w-full gap-4">
+      <div className="w-full gap-4 p-4">
         <div>
           <hr className="border-t-2 border-gray-300 my-4" />
           <h1 className="text-lg font-bold mb-2 mt-4">{products.name}</h1>
