@@ -7,7 +7,6 @@ import "./globals.css";
 
 // Importa o Client Component que contém todos os seus provedores.
 import AllProviders from "@/components/providers/AllProviders"; // <--- NOVO IMPORT
-import { Footer } from "./(public)/_components/footer/Footer";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -37,7 +36,6 @@ export default function RootLayout({
         {/* Envolve 'children' com o Client Component 'AllProviders'. */}
         {/* 'AllProviders' por sua vez contém SessionProvider e ToastProvider. */}
         <AllProviders>{children}</AllProviders>
-        <Footer />
       </body>
     </html>
   );

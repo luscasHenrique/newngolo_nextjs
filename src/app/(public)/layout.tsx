@@ -6,6 +6,7 @@
 // REMOVA: import "../globals.css"; // CSS global é importado no layout raiz.
 // REMOVA: import { ToastProvider } from "@/components/providers/ToastProvider"; // ToastProvider agora está no layout raiz.
 
+import { Footer } from "./_components/footer/Footer";
 import { HeaderMenu } from "./_components/headerMenu/HeaderMenu"; // Seu componente de cabeçalho público.
 
 // NÃO DEFINA FONTES AQUI:
@@ -26,6 +27,7 @@ export default function PublicLayout({
       <div className="space-y-10 my-10 max-w-7xl mx-auto px-4">
         {children} {/* Páginas públicas (ex: /signin, /signup) */}
       </div>
+      <Footer />
     </>
   );
 }

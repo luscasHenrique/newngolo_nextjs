@@ -2,7 +2,7 @@
 "use client";
 
 import React, { useRef, useEffect } from "react";
-import Link from "next/link";
+import Link from "next/link"; // Certifique-se que está usando Link do next/link
 import {
   Bell,
   Dot,
@@ -16,8 +16,7 @@ import {
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useMenuNotifications } from "./useMenuNotifications";
-// Removido: import './MenuNotifications.css'; // Não precisamos mais deste CSS para o tooltip
-import { NotificationType } from "@/types/notification";
+import { Notification, NotificationType } from "@/types/notification"; // Importa Notification também
 
 export const MenuNotifications: React.FC = () => {
   const {
@@ -33,7 +32,10 @@ export const MenuNotifications: React.FC = () => {
   const dropdownRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
 
-  // Removido: tooltipContent, pois o tooltip será removido
+  const truncateMessage = (message: string, maxLength: number) => {
+    if (message.length <= maxLength) return message;
+    return message.substring(0, maxLength) + "...";
+  };
 
   const getNotificationIcon = (type?: NotificationType) => {
     switch (type) {
@@ -87,7 +89,6 @@ export const MenuNotifications: React.FC = () => {
 
   return (
     <div className="relative inline-block text-left z-50">
-      {/* Removido o tooltip-container */}
       <button
         ref={buttonRef}
         type="button"
@@ -99,12 +100,10 @@ export const MenuNotifications: React.FC = () => {
         <Bell className="h-6 w-6" />
         {totalUnreadCount > 0 && (
           <span className="absolute top-0 left-1/2 -translate-x-1/4 -translate-y-1/4 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-red-100 bg-red-600 rounded-full min-w-[20px] h-[20px]">
-            {/* Ajuste do `left-1/2 -translate-x-1/4 -translate-y-1/4` para puxar mais para a esquerda e um pouco para cima/direita */}
             {totalUnreadCount > 99 ? "99+" : totalUnreadCount}
           </span>
         )}
       </button>
-      {/* Removido o span do tooltip-text */}
 
       <AnimatePresence>
         {isDropdownOpen && (
@@ -128,10 +127,13 @@ export const MenuNotifications: React.FC = () => {
                 notifications.map((notification) => (
                   <Link
                     key={notification.id}
-                    href={notification.link || "/notifications"}
+                    // Redireciona para a página de notificações, passando o ID via query param
+                    href={`/notifications?id=${notification.id}`}
+                    // Chamada onClick para marcar como lida e fechar o dropdown ANTES do redirecionamento
                     onClick={() => {
                       markAsRead(notification.id);
-                      toggleDropdown();
+                      toggleDropdown(); // Fecha o dropdown
+                      // O redirecionamento acontece automaticamente pelo Link
                     }}
                     className={`flex items-start px-4 py-3 text-sm hover:bg-gray-50 ${
                       notification.read
@@ -148,7 +150,9 @@ export const MenuNotifications: React.FC = () => {
                       {getNotificationIcon(notification.type)}
                     </span>
                     <span className="flex-grow">
-                      {notification.message}
+                      <p className="text-base">
+                        {truncateMessage(notification.message, 60)}
+                      </p>
                       <p className="text-xs text-gray-400 mt-0.5">
                         {new Date(notification.createdAt).toLocaleDateString(
                           "pt-BR",
