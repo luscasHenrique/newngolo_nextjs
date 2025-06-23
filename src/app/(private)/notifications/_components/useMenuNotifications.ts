@@ -13,7 +13,7 @@ export function useMenuNotifications() {
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [unreadCount, setUnreadCount] = useState<number>(0);
   const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
-  const NOTIFICATION_LIMIT = 6;
+  const NOTIFICATION_LIMIT = 5;
 
   const getNotificationsFromApi = useCallback(async () => {
     return new Promise<Notification[]>((resolve) => {
