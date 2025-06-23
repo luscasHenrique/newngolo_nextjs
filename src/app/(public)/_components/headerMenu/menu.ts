@@ -19,7 +19,11 @@ import {
   Twitter,
   Dribbble, // Ícones sociais
   User as UserIcon,
-  SettingsIcon, // Renomeado User para evitar conflito com 'user' genérico
+  SettingsIcon,
+  BookOpen,
+  CalendarClock,
+  Music,
+  Newspaper, // Renomeado User para evitar conflito com 'user' genérico
 } from "lucide-react"; // Adicionado User para o ícone de perfil
 
 // Menu principal
@@ -30,32 +34,24 @@ export const mainHeaderMenu: MenuItem[] = [
     href: "/",
   },
   {
-    icon: Users,
-    label: "Audience",
+    icon: BookOpen,
+    label: "História",
+    href: "/history",
   },
   {
-    icon: FileText,
-    label: "Posts",
-    href: "/posts",
+    icon: CalendarClock,
+    label: "Eventos",
+    href: "/events",
   },
   {
-    icon: Calendar,
-    label: "Schedules",
-    href: "/schedules",
+    icon: Music,
+    label: "Musicas",
+    href: "/music",
   },
   {
-    icon: BarChart,
-    label: "Income",
-    submenu: [
-      {
-        label: "Earnings",
-        href: "/income-1",
-      },
-      {
-        label: "Income 2",
-        href: "/income-2",
-      },
-    ],
+    icon: Newspaper,
+    label: "Artigos",
+    href: "/articles",
   },
   {
     icon: LockKeyhole,

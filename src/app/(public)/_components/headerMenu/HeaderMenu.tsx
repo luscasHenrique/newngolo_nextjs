@@ -1,8 +1,9 @@
 // src/app/(public)/(home)/_components/headerMenu/HeaderMenu.tsx
 "use client";
 
-import { useState } from "react"; // <-- Certificar que useState está importado
+import { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import {
   Menu,
   X,
@@ -13,7 +14,7 @@ import {
   ChevronRight,
   Loader2,
   LockKeyhole,
-} from "lucide-react"; // Importar LockKeyhole
+} from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useSession, signOut as nextAuthSignOut } from "next-auth/react";
 import { notify } from "@/lib/notify";
@@ -24,13 +25,14 @@ import {
   mainHeaderMenu as originalMainHeaderMenu,
   profileMenu,
 } from "./menu";
-import router from "next/router";
+import { MenuNotifications } from "@/app/(private)/notifications/_components/MenuNotifications";
 
 export function HeaderMenu() {
-  const [isOpen, setIsOpen] = useState(false); // Estado para abrir/fechar o menu mobile principal
-  const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false); // <-- AQUI! Estado para o submenu "Perfil" no mobile
+  const [isOpen, setIsOpen] = useState(false);
+  const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
   const { data: session, status } = useSession();
   const isLoading = status === "loading";
+  const router = useRouter();
 
   async function handleLogout() {
     try {
@@ -88,13 +90,35 @@ export function HeaderMenu() {
               className="h-14 w-auto hover:opacity-80 transition"
             />
           </Link>
-          <div className="flex items-center gap-2">
-            <Link
-              href="/"
-              className="text-xl font-bold hover:opacity-80 transition hidden md:block"
-            >
-              NGOLO
-            </Link>
+
+          {/* Área à direita do logo - para desktop/mobile */}
+          <div className="flex items-center gap-2 sm:gap-4">
+            {" "}
+            {/* Ajustei o gap para mobile/desktop */}
+            {/* Componente de Notificações - Visível em mobile e desktop/tablet */}
+            {status === "authenticated" && (
+              <MenuNotifications /> // Renderiza o sino sempre que logado
+            )}
+            {/* Texto "NGOLO" ou Link de login - SÓ VISÍVEL EM DESKTOP (md:block) */}
+            {status === "unauthenticated" ? (
+              <Link
+                href="/"
+                className="text-xl font-bold hover:opacity-80 transition hidden md:block" // Escondido em mobile
+              >
+                NGOLO
+              </Link>
+            ) : (
+              // Se autenticado, não mostra "NGOLO" aqui.
+              // O nome do usuário (ou "Perfil") já está no menu de navegação à direita.
+              // E o sino já está ao lado.
+              // Para o caso de usuário autenticado sem ter um perfil "dropdown" no menu principal,
+              // mas ainda queremos um "nome" ali, podemos adicionar uma div vazia ou ajustar.
+              // Por agora, se autenticado, só o sino fica ali.
+              <span className="hidden md:block">
+                {/* Aqui poderia ser o nome do usuário ou um ícone de perfil se não for no menu principal */}
+              </span>
+            )}
+            {/* Botão do menu mobile (hambúrguer) - VISÍVEL APENAS EM MOBILE */}
             <button
               className="block md:hidden p-2 rounded-md hover:bg-gray-100"
               onClick={() => setIsOpen(true)}
@@ -105,6 +129,7 @@ export function HeaderMenu() {
           </div>
         </div>
 
+        {/* Menu de navegação desktop (Centralizado) */}
         <nav className="hidden md:flex absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 space-x-6 z-10">
           {isLoading ? (
             <div className="flex items-center space-x-2 text-gray-500">
@@ -162,7 +187,7 @@ export function HeaderMenu() {
         </nav>
       </header>
 
-      {/* Overlay + Menu mobile animado */}
+      {/* Overlay + Menu mobile animado (sem o sino duplicado aqui) */}
       <AnimatePresence>
         {isOpen && (
           <>
@@ -200,6 +225,8 @@ export function HeaderMenu() {
                 </div>
               </div>
 
+              {/* Removido o MenuNotifications daqui, pois ele já fica fora do menu no mobile */}
+
               <div className="pt-4 space-y-2 flex-1 overflow-y-auto">
                 {dynamicMainMenu.map((item, index) => (
                   <div key={index}>
@@ -217,7 +244,7 @@ export function HeaderMenu() {
                     ) : item.submenu ? (
                       <div className="py-2">
                         <button
-                          onClick={() => setIsProfileMenuOpen((prev) => !prev)} // Mobile submenu toggle
+                          onClick={() => setIsProfileMenuOpen((prev) => !prev)}
                           className="flex items-center w-full font-medium text-gray-700 hover:bg-gray-100 rounded px-3 py-2"
                         >
                           {item.icon && (
