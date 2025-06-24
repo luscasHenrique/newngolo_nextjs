@@ -5,6 +5,8 @@ import React from "react";
 import { SectionTitle } from "@/components/ui/SectionTitle"; // Se você tiver um componente SectionTitle global
 import { HighlightCarousel } from "./_components/highlightCarousel/HighlightCarousel"; // Importar o carrossel
 import { highlightCardsMock } from "./data/highlightCardsMock"; // Importar o mock de dados
+import { featuredMediaList } from "./data/featuredMedia";
+import { Card } from "./_components/Card";
 
 export default function MusicPage() {
   return (
@@ -17,6 +19,17 @@ export default function MusicPage() {
       {/* Aqui você renderiza o seu carrossel de destaques de músicas */}
       <section className="">
         <HighlightCarousel cards={highlightCardsMock} />
+      </section>
+      <section className="flex flex-wrap gap-6 justify-center">
+        {featuredMediaList.map((item, index) => (
+          <Card
+            key={index}
+            imageSrc={item.imageSrc}
+            title={item.title}
+            subtitle={item.subtitle}
+            links={item.links}
+          />
+        ))}
       </section>
       {/* Você pode adicionar outras seções aqui, como: */}
       <section className="">
