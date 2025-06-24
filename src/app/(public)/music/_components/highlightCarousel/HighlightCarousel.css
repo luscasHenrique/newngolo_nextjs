@@ -36,9 +36,9 @@
 /* Estilos para os botões de navegação do Swiper (para remover o after content) */
 .swiper-button-next::after,
 .swiper-button-prev::after {
-  font-size: 1.2rem;
+  font-size: 1.6rem;
   font-weight: bold;
-  color: #868686;
+  color: #1900fd;
   border-radius: 100%;
   padding: 0.8rem;
   cursor: pointer;
@@ -48,5 +48,5 @@
 
 .swiper-button-next:hover::after,
 .swiper-button-prev:hover::after {
-  color: #4b5563;
+  color: #535353;
 }

@@ -5,7 +5,7 @@ import { HighlightCardData } from "@/app/(public)/music/types/highlightCard";
 export const highlightCardsMock: HighlightCardData[] = [
   {
     id: "1",
-    coverImage: "/images/canto-raiz-mestre-dionizio.jpg",
+    coverImage: "/images/cantoRaiz.jpeg",
     title: "Canto Raiz",
     subtitle: "Mestre Dionizio",
     description: "Em breve em todas as plataformas digitais",
@@ -17,7 +17,7 @@ export const highlightCardsMock: HighlightCardData[] = [
   },
   {
     id: "2",
-    coverImage: "/images/capoeira-training.jpg",
+    coverImage: "/images/cantoRaiz.jpeg",
     title: "Treino Capoeira",
     subtitle: "Metodologia Avançada",
     description: "Descubra o programa de treino que vai revolucionar sua arte.",
@@ -32,7 +32,7 @@ export const highlightCardsMock: HighlightCardData[] = [
   },
   {
     id: "3",
-    coverImage: "/images/event-capoeira.jpg",
+    coverImage: "/images/cantoRaiz.jpeg",
     title: "Encontro Anual",
     subtitle: "Roda Internacional",
     description: "Prepare-se para o maior evento do ano! Inscrições abertas.",
@@ -47,7 +47,7 @@ export const highlightCardsMock: HighlightCardData[] = [
   },
   {
     id: "4",
-    coverImage: "/images/mestre-capoeira.jpg",
+    coverImage: "/images/cantoRaiz.jpeg",
     title: "Aulas Online",
     subtitle: "Mestre João",
     description:
