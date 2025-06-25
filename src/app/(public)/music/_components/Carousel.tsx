@@ -48,7 +48,7 @@ export const Carousel: FC = () => {
             key={index}
             className={`!w-[300px] md:!w-[350px] lg:!w-[400px] transition-all duration-500 ${
               index === activeIndex
-                ? "opacity-100 scale-85"
+                ? "opacity-100 scale-88"
                 : "opacity-90 scale-95"
             }`}
           >
