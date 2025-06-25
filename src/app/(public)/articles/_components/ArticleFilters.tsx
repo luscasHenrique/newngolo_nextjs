@@ -1,17 +1,25 @@
 // src/app/articles/_components/ArticleFilters.tsx
-// Este é um componente de UI puro, pode ser um Server Component ou Client Component.
-// Para lidar com onChange, ele precisa ser um Client Component ou receber callbacks.
-// Vamos fazer ele receber os valores e callbacks como props.
+// Este componente ainda é de UI puro.
+// Como ele usa componentes do shadcn/ui que podem ter lógica interna ou depender de Client Components,
+// é uma boa prática marcá-lo com "use client" se estiver em dúvida,
+// ou se observar que os componentes do shadcn/ui que ele importa já são Client Components.
+// Neste caso, Input e Select do shadcn/ui geralmente são Client Components.
+"use client";
 
-// Não precisa de "use client" se as funções handleSearchChange e handleCategoryChange
-// forem passadas como props do ArticleListDisplay.tsx, que é Client Component.
-// Assim, ele se torna um "dumb component".
+import { Input } from "@/components/ui/input"; // Ajuste o caminho conforme sua configuração do shadcn/ui
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"; // Ajuste o caminho
 
 interface ArticleFiltersProps {
   searchTerm: string;
-  onSearchChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onSearchChange: (e: React.ChangeEvent<HTMLInputElement>) => void; // Evento do input
   selectedCategory: string;
-  onCategoryChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
+  onCategoryChange: (value: string) => void; // Evento do Select do shadcn/ui passa o valor diretamente
   availableCategories: string[];
 }
 
@@ -23,26 +31,30 @@ const ArticleFilters: React.FC<ArticleFiltersProps> = ({
   availableCategories,
 }) => {
   return (
-    <div className="mb-8 p-6 bg-gray-50 rounded-lg shadow-inner flex flex-col md:flex-row items-center justify-between gap-4">
-      <input
+    <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+      {/* Componente Input do shadcn/ui */}
+      <Input
         type="text"
         placeholder="Pesquisar por título, descrição ou autor..."
-        className="p-3 border border-gray-300 rounded-lg w-full md:w-2/3 focus:ring-blue-500 focus:border-blue-500 transition duration-200"
         value={searchTerm}
         onChange={onSearchChange}
+        className="w-full md:w-2/3" // Tailwind classes para largura
       />
-      <select
-        className="p-3 border border-gray-300 rounded-lg w-full md:w-1/3 bg-white focus:ring-blue-500 focus:border-blue-500 transition duration-200"
-        value={selectedCategory}
-        onChange={onCategoryChange}
-      >
-        <option value="all">Todas as Categorias</option>
-        {availableCategories.map((category) => (
-          <option key={category} value={category}>
-            {category}
-          </option>
-        ))}
-      </select>
+
+      {/* Componente Select do shadcn/ui */}
+      <Select value={selectedCategory} onValueChange={onCategoryChange}>
+        <SelectTrigger className="w-full md:w-1/3">
+          <SelectValue placeholder="Todas as Categorias" />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="all">Todas as Categorias</SelectItem>
+          {availableCategories.map((category) => (
+            <SelectItem key={category} value={category}>
+              {category}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
     </div>
   );
 };

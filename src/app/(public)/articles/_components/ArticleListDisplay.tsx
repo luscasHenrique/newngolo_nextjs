@@ -1,26 +1,24 @@
 // src/app/articles/_components/ArticleListDisplay.tsx
-"use client"; // Este é um Client Component pois usa hooks de estado
+"use client";
 
 import { useCallback } from "react";
 import ArticleCard from "./ArticleCard";
-import ArticleFilters from "./ArticleFilters"; // Importa o componente de UI do filtro
-import { useArticleFilters } from "../_hooks/useArticleFilters"; // Importa o hook de lógica
-import type { Article } from "../_types/Article"; // Importa o tipo
+import ArticleFilters from "./ArticleFilters";
+import { useArticleFilters } from "../_hooks/useArticleFilters";
+import type { Article } from "../_types/Article";
 
 interface ArticleListDisplayProps {
-  initialArticles: Article[]; // Artigos iniciais vindos do Server Component
-  availableCategories: string[]; // Categorias disponíveis
+  initialArticles: Article[];
+  availableCategories: string[];
 }
 
 const ArticleListDisplay: React.FC<ArticleListDisplayProps> = ({
   initialArticles,
   availableCategories,
 }) => {
-  // Lógica de filtragem vem do hook personalizado
   const { filters, setFilters, filteredArticles } =
     useArticleFilters(initialArticles);
 
-  // Callbacks otimizados com useCallback para passar para ArticleFilters
   const handleSearchChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       setFilters((prev) => ({ ...prev, searchTerm: e.target.value }));
@@ -28,9 +26,10 @@ const ArticleListDisplay: React.FC<ArticleListDisplayProps> = ({
     [setFilters]
   );
 
+  // AJUSTE AQUI: onCategoryChange agora recebe 'value: string' diretamente
   const handleCategoryChange = useCallback(
-    (e: React.ChangeEvent<HTMLSelectElement>) => {
-      setFilters((prev) => ({ ...prev, category: e.target.value }));
+    (value: string) => {
+      setFilters((prev) => ({ ...prev, category: value }));
     },
     [setFilters]
   );
@@ -41,8 +40,8 @@ const ArticleListDisplay: React.FC<ArticleListDisplayProps> = ({
         searchTerm={filters.searchTerm}
         onSearchChange={handleSearchChange}
         selectedCategory={filters.category}
-        onCategoryChange={handleCategoryChange}
-        availableCategories={availableCategories} // Passa as categorias para o componente de filtro UI
+        onCategoryChange={handleCategoryChange} // Passa a função ajustada
+        availableCategories={availableCategories}
       />
 
       {filteredArticles.length === 0 ? (
