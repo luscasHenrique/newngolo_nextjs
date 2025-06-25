@@ -1,160 +1,53 @@
 // src/app/articles/page.tsx
+// Este é um Server Component por padrão.
 
-import { useState, useEffect } from "react";
-import ArticleFilters from "./_components/ArticleFilters";
-import ArticleCard from "./_components/ArticleCard";
+import { SectionTitle } from "@/components/ui/SectionTitle";
+import ArticleListDisplay from "./_components/ArticleListDisplay";
+import type { Article } from "./_types/Article"; // Importa o tipo
+import { mockArticles } from "./data/mockArticles";
 
-// Suponha que seus dados de artigos venham de uma API ou de um arquivo local
-interface Article {
-  id: string;
-  title: string;
-  description: string;
-  author?: string;
-  publishDate: string;
-  fileSize: string;
-  fileType: string;
-  downloadLink: string;
-  category: string;
+// Função para buscar os artigos (executada no servidor)
+// Por enquanto, usa os dados mockados diretamente.
+// Se quiser usar uma API Route, pode chamar `fetch('/api/articles')` ou similar.
+async function getArticles(): Promise<Article[]> {
+  // Em um projeto real, aqui você faria uma chamada a uma API externa,
+  // um CMS, ou consultaria um banco de dados.
+  // Por exemplo:
+  // const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/articles`, { next: { revalidate: 3600 } });
+  // if (!res.ok) throw new Error('Failed to fetch articles');
+  // return res.json();
+
+  // Usando dados mockados:
+  return Promise.resolve(mockArticles);
 }
 
-const allArticles: Article[] = [
-  {
-    id: "1",
-    title: "O Futuro da Inteligência Artificial",
-    description:
-      "Explore as últimas tendências e previsões para o campo da IA.",
-    author: "Maria Silva",
-    publishDate: "2023-05-10",
-    fileSize: "3.1 MB",
-    fileType: "PDF",
-    downloadLink: "/downloads/ia-futuro.pdf",
-    category: "Tecnologia",
-  },
-  {
-    id: "2",
-    title: "Guia Completo de Marketing Digital",
-    description:
-      "Um guia abrangente para estratégias de marketing digital eficazes.",
-    author: "João Oliveira",
-    publishDate: "2023-04-22",
-    fileSize: "4.8 MB",
-    fileType: "PDF",
-    downloadLink: "/downloads/marketing-digital.pdf",
-    category: "Marketing",
-  },
-  {
-    id: "3",
-    title: "Tendências de Negócios para 2024",
-    description:
-      "Descubra as principais tendências que moldarão o cenário empresarial.",
-    author: "Ana Paula",
-    publishDate: "2024-01-15",
-    fileSize: "2.0 MB",
-    fileType: "DOCX",
-    downloadLink: "/downloads/negocios-2024.docx",
-    category: "Negócios",
-  },
-  {
-    id: "4",
-    title: "Introdução à Programação Front-end",
-    description:
-      "Conceitos básicos para quem quer começar a desenvolver interfaces web.",
-    author: "Carlos Eduardo",
-    publishDate: "2023-11-01",
-    fileSize: "1.5 MB",
-    fileType: "PDF",
-    downloadLink: "/downloads/frontend-intro.pdf",
-    category: "Tecnologia",
-  },
-];
+export default async function ArticlesPage() {
+  const articles = await getArticles(); // Busca os dados no servidor
 
-export async function getStaticProps() {
-  // Em um projeto real, você buscaria isso de um CMS, banco de dados, etc.
-  // Por simplicidade, estamos usando os dados mockados acima.
-  const categories = Array.from(
-    new Set(allArticles.map((article) => article.category))
+  // Extrai as categorias únicas para o filtro, incluindo 'all' para a opção de filtro.
+  const uniqueCategories = Array.from(
+    new Set(articles.map((article) => article.category))
   );
-  return {
-    props: {
-      articles: allArticles,
-      categories: ["all", ...categories], // 'all' para todas as categorias
-    },
-  };
-}
-
-interface ArticlesPageProps {
-  articles: Article[];
-  categories: string[];
-}
-
-const ArticlesPage: React.FC<ArticlesPageProps> = ({
-  articles,
-  categories,
-}) => {
-  const [filteredArticles, setFilteredArticles] = useState(articles);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState("all");
-
-  useEffect(() => {
-    let currentFiltered = articles;
-
-    // Filtrar por categoria
-    if (selectedCategory !== "all") {
-      currentFiltered = currentFiltered.filter(
-        (article) => article.category === selectedCategory
-      );
-    }
-
-    // Filtrar por termo de pesquisa
-    if (searchTerm) {
-      currentFiltered = currentFiltered.filter(
-        (article) =>
-          article.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          article.description
-            .toLowerCase()
-            .includes(searchTerm.toLowerCase()) ||
-          (article.author &&
-            article.author.toLowerCase().includes(searchTerm.toLowerCase()))
-      );
-    }
-
-    setFilteredArticles(currentFiltered);
-  }, [searchTerm, selectedCategory, articles]);
+  // availableCategories não precisa do 'all' aqui, pois o ArticleFilters adiciona como opção padrão.
 
   return (
-    <div className="container mx-auto p-6">
-      <h1 className="text-4xl font-bold text-center mb-8">
-        Nossos Artigos para Download
-      </h1>
+    <>
+      {/* Hero Section */}
 
-      <ArticleFilters
-        onSearch={setSearchTerm}
-        onCategoryChange={setSelectedCategory}
-        categories={categories.filter((cat) => cat !== "all")} // Não passa 'all' para o componente de filtro, pois ele já tem
-      />
-
-      {filteredArticles.length === 0 ? (
-        <p className="text-center text-gray-700 text-lg">
-          Nenhum artigo encontrado com os filtros selecionados.
+      <section className="text-center">
+        <SectionTitle title="Nossa Biblioteca de Artigos" animate={true} />
+        <p className="mt-4">
+          Explore e faça o download de nossos artigos técnicos e guias completos
+          sobre diversos tópicos relevantes. Aprofunde seus conhecimentos e
+          mantenha-se atualizado.
         </p>
-      ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredArticles.map((article) => (
-            <ArticleCard
-              key={article.id}
-              title={article.title}
-              description={article.description}
-              author={article.author}
-              publishDate={article.publishDate}
-              fileSize={article.fileSize}
-              fileType={article.fileType}
-              downloadLink={article.downloadLink}
-            />
-          ))}
-        </div>
-      )}
-    </div>
-  );
-};
+      </section>
 
-export default ArticlesPage;
+      {/* ArticleListDisplay é o Client Component que gerencia a exibição e a lógica de filtro */}
+      <ArticleListDisplay
+        initialArticles={articles}
+        availableCategories={uniqueCategories}
+      />
+    </>
+  );
+}

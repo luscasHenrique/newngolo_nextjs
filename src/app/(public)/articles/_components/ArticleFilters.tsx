@@ -1,46 +1,43 @@
-// /src/app/(public)/articles/_components/ArticleFilters.tsx
-import React, { useState } from "react";
+// src/app/articles/_components/ArticleFilters.tsx
+// Este é um componente de UI puro, pode ser um Server Component ou Client Component.
+// Para lidar com onChange, ele precisa ser um Client Component ou receber callbacks.
+// Vamos fazer ele receber os valores e callbacks como props.
+
+// Não precisa de "use client" se as funções handleSearchChange e handleCategoryChange
+// forem passadas como props do ArticleListDisplay.tsx, que é Client Component.
+// Assim, ele se torna um "dumb component".
 
 interface ArticleFiltersProps {
-  onSearch: (searchTerm: string) => void;
-  onCategoryChange: (category: string) => void;
-  categories: string[];
+  searchTerm: string;
+  onSearchChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  selectedCategory: string;
+  onCategoryChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
+  availableCategories: string[];
 }
 
 const ArticleFilters: React.FC<ArticleFiltersProps> = ({
-  onSearch,
+  searchTerm,
+  onSearchChange,
+  selectedCategory,
   onCategoryChange,
-  categories,
+  availableCategories,
 }) => {
-  const [searchTerm, setSearchTerm] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState("all");
-
-  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchTerm(e.target.value);
-    onSearch(e.target.value);
-  };
-
-  const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setSelectedCategory(e.target.value);
-    onCategoryChange(e.target.value);
-  };
-
   return (
-    <div className="mb-6 p-4 bg-gray-100 rounded-lg flex flex-col sm:flex-row items-center justify-between gap-4">
+    <div className="mb-8 p-6 bg-gray-50 rounded-lg shadow-inner flex flex-col md:flex-row items-center justify-between gap-4">
       <input
         type="text"
-        placeholder="Pesquisar artigos..."
-        className="p-2 border rounded w-full sm:w-1/2"
+        placeholder="Pesquisar por título, descrição ou autor..."
+        className="p-3 border border-gray-300 rounded-lg w-full md:w-2/3 focus:ring-blue-500 focus:border-blue-500 transition duration-200"
         value={searchTerm}
-        onChange={handleSearchChange}
+        onChange={onSearchChange}
       />
       <select
-        className="p-2 border rounded w-full sm:w-auto"
+        className="p-3 border border-gray-300 rounded-lg w-full md:w-1/3 bg-white focus:ring-blue-500 focus:border-blue-500 transition duration-200"
         value={selectedCategory}
-        onChange={handleCategoryChange}
+        onChange={onCategoryChange}
       >
         <option value="all">Todas as Categorias</option>
-        {categories.map((category) => (
+        {availableCategories.map((category) => (
           <option key={category} value={category}>
             {category}
           </option>
