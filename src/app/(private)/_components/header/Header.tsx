@@ -14,7 +14,7 @@ import { notify } from "@/lib/notify";
 
 import { useHeader } from "./useHeader";
 import { footerMenu, mainMenu } from "../navmenu/menuData/menu"; // Certifique-se que o caminho está correto
-import { MenuItem, SubMenuItem } from "@/model/Menu"; // Certifique-se que o caminho está correto
+import { MenuItem, SubMenuItem } from "@/models/Menu"; // Certifique-se que o caminho está correto
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 export function Header() {

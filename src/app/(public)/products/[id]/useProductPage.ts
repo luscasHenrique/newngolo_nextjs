@@ -4,7 +4,7 @@
 import { useEffect, useState, useRef, useCallback } from "react";
 import { useRouter, useParams } from "next/navigation";
 import { Product } from "@/types/product/product";
-import { UserProfile } from "@/model/UserProfile";
+import { UserProfile } from "@/models/UserProfile";
 import {
   SelectedColorState,
   SelectedSizeState,
@@ -23,8 +23,8 @@ import {
   ProductAddCartPayload,
 } from "@/types/product/cart";
 import { Grade } from "@/types/product/grade";
-import { Address } from "@/model/Address";
-import { AuthUser } from "@/model/AuthUser";
+import { Address } from "@/models/Address";
+import { AuthUser } from "@/models/AuthUser";
 import { getUserProfile } from "@/services/userService";
 import { toCurrency } from "@/helpers/currency/toCurrency";
 

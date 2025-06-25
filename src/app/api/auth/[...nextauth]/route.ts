@@ -11,8 +11,8 @@ import { signIn as authServiceSignIn } from "@/services/auth";
 // Importa os modelos de usuário que você definiu.
 // AuthUser: O tipo de usuário mínimo que vem diretamente da sua API de login.
 // UserProfile: O tipo de usuário completo que você busca do endpoint /user/perfil.
-import { AuthUser } from "@/model/AuthUser";
-import { UserProfile } from "@/model/UserProfile";
+import { AuthUser } from "@/models/AuthUser";
+import { UserProfile } from "@/models/UserProfile";
 
 const handler = NextAuth({
   // --- Provedores de Autenticação ---

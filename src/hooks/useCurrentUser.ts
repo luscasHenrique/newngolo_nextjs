@@ -2,7 +2,7 @@
 "use client";
 
 import { useSession } from "next-auth/react";
-import { AuthUser } from "@/model/AuthUser";
+import { AuthUser } from "@/models/AuthUser";
 
 /**
  * Hook para obter o usuário atualmente logado e o estado de carregamento da sessão do NextAuth.js.

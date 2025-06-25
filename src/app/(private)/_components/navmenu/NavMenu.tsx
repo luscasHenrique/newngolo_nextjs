@@ -12,7 +12,7 @@ import { useCurrentUser } from "@/hooks/useCurrentUser";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 // Remova: import { signOut as authSignOut } from "@/services/auth";
 import { signOut as nextAuthSignOut } from "next-auth/react"; // <-- AQUI ESTÁ A MUDANÇA
-import { MenuItem, SubMenuItem } from "@/model/Menu";
+import { MenuItem, SubMenuItem } from "@/models/Menu";
 
 import { footerMenu, mainMenu } from "../navmenu/menuData/menu";
 import { useNavMenu } from "./useNavMenu";

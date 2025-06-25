@@ -1,7 +1,7 @@
 // src/app/(public)/(home)/_components/headerMenu/menu.ts
 // Certifique-se que você tenha o caminho correto para o seu MenuItem.
 // ex: import { MenuItem } from "@/types/model/Menu";
-import { MenuItem } from "@/model/Menu";
+import { MenuItem } from "@/models/Menu";
 import {
   Home,
   Users,

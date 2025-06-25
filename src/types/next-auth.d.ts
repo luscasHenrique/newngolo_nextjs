@@ -4,7 +4,7 @@
 
 import NextAuth from "next-auth";
 import { JWT } from "next-auth/jwt";
-import { AuthUser } from "@/model/AuthUser"; // Importa sua interface AuthUser.
+import { AuthUser } from "@/models/AuthUser"; // Importa sua interface AuthUser.
 
 declare module "next-auth" {
   /**

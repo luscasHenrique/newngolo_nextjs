@@ -3,7 +3,7 @@
 
 import React from "react";
 import { Product } from "@/types/product/product";
-import { UserProfile } from "@/model/UserProfile";
+import { UserProfile } from "@/models/UserProfile";
 import {
   SelectedColorState,
   SelectedSizeState,

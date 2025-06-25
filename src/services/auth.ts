@@ -7,8 +7,8 @@ import { api } from "./api"; // Importa a instância do Axios que configuramos e
 // - Auth é a interface da resposta COMPLETA da API de login.
 // - AuthPayload é a interface dos DADOS QUE ENVIAMOS para login (email, password, grant_type).
 // - AuthUser é a interface para o OBJETO DE USUÁRIO retornado pela API.
-import { Auth as AuthResponseModel, AuthPayload } from "../model/Auth";
-import { AuthUser } from "../model/AuthUser"; // AuthUser é importado DIRETAMENTE de seu próprio arquivo.
+import { Auth as AuthResponseModel, AuthPayload } from "../models/Auth";
+import { AuthUser } from "../models/AuthUser"; // AuthUser é importado DIRETAMENTE de seu próprio arquivo.
 
 import { env } from "../config/env"; // Suas variáveis de ambiente configuradas em src/config/env.ts
 

@@ -3,7 +3,7 @@
 
 import { useState, useEffect } from "react";
 import { Product } from "@/types/product/product";
-import { UserProfile } from "@/model/UserProfile"; // UserProfile agora tem address?: Address[]
+import { UserProfile } from "@/models/UserProfile"; // UserProfile agora tem address?: Address[]
 import {
   SelectedColorState,
   SelectedSizeState,

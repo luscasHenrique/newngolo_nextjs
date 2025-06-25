@@ -2,7 +2,7 @@
 // Este arquivo contém as funções para interagir com a API relacionadas aos usuários.
 
 import { api } from "./api"; // Importa a instância do Axios que configuramos em src/services/api.ts
-import { UserProfile } from "@/model/UserProfile"; // Importa a interface para o perfil completo do usuário.
+import { UserProfile } from "@/models/UserProfile"; // Importa a interface para o perfil completo do usuário.
 
 /**
  * Obtém o perfil completo de um usuário da API.
