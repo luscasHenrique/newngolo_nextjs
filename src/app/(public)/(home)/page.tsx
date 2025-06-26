@@ -32,14 +32,13 @@ export default function Home() {
           videoSrc={videoBanner.videoSrc}
         />
       </div>
-
       {/* Seção das Aulas */}
-      <section className="">
+      <section className="mb-12">
         <SectionTitle title="Nossas Unidades de Ensino" animate={true} />
-        <p className="text-xl font-light ">
+        <p className="text-xl font-light mb-6">
           Encontre a aula e o professor ideal para você.
         </p>
-        <div className="mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 justify-items-center">
+        <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 place-items-stretch">
           {loading && <p>Carregando aulas...</p>}
           {error && (
             <p className="text-red-500">Erro ao carregar aulas: {error}</p>
