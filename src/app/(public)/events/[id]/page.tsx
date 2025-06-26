@@ -4,6 +4,7 @@
 import { notFound } from "next/navigation";
 import { mockEvents } from "../data/mockEvents"; // Caminho ajustado para _data
 import type { Event } from "../types/Event"; // Caminho ajustado para _types
+import { SectionTitle } from "@/components/ui/SectionTitle";
 
 interface EventDetailsPageProps {
   // A tipagem de 'params' é um objeto simples, mas o Next.js o envolve em uma Promise por debaixo dos panos
@@ -74,12 +75,11 @@ export default async function EventDetailsPage({
   }
 
   return (
-    <div className="container mx-auto p-6 max-w-4xl bg-white shadow-lg rounded-lg my-8">
-      <h1 className="text-4xl font-bold text-gray-900 mb-4 border-b pb-3">
-        {event.title}
-      </h1>
-
-      <p className="text-lg text-purple-700 mb-4 flex items-center gap-2">
+    <>
+      <section className="text-center">
+        <SectionTitle title={event.title} animate={true} />
+      </section>
+      <p className="text-lg text-green-700 mb-4 flex items-center gap-2">
         🗓️ <span className="font-medium">{formattedPeriod}</span>
         {event.location && (
           <span className="ml-4 flex items-center gap-1">
@@ -89,7 +89,7 @@ export default async function EventDetailsPage({
       </p>
 
       <div className="flex flex-wrap gap-2 text-sm mb-6">
-        <span className="p-1 px-3 bg-purple-100 text-purple-800 rounded-full font-semibold">
+        <span className="p-1 px-3 bg-green-100 text-green-800 rounded-full font-semibold">
           {event.category}
         </span>
         {event.isOnline && (
@@ -177,6 +177,6 @@ export default async function EventDetailsPage({
           </a>
         )}
       </div>
-    </div>
+    </>
   );
 }
