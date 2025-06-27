@@ -23,7 +23,8 @@ import {
   BookOpen,
   CalendarClock,
   Music,
-  Newspaper, // Renomeado User para evitar conflito com 'user' genérico
+  Newspaper,
+  Handshake, // Renomeado User para evitar conflito com 'user' genérico
 } from "lucide-react"; // Adicionado User para o ícone de perfil
 
 // Menu principal
@@ -37,6 +38,20 @@ export const mainHeaderMenu: MenuItem[] = [
     icon: BookOpen,
     label: "História",
     href: "/history",
+  },
+  {
+    icon: Handshake,
+    label: "O Grupo",
+    submenu: [
+      {
+        label: "Sistema de Graduação",
+        href: "/graduation",
+      },
+      {
+        label: "Professores",
+        href: "/professors",
+      },
+    ],
   },
   {
     icon: CalendarClock,
