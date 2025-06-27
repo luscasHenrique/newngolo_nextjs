@@ -35,9 +35,9 @@ export default function ProfessorsPage() {
 
   return (
     // CORREÇÃO AQUI: Adiciona um contêiner principal para o layout da página
-    <div className="container mx-auto p-6 lg:p-10">
+    <>
       {/* Hero Section */}
-      <section className="text-center mb-12 py-8 bg-gradient-to-r from-teal-600 to-cyan-700 text-white rounded-lg shadow-lg">
+      <section className="text-center ">
         <SectionTitle title={sectionTitle} animate={true} />
         <p className="text-xl font-light max-w-3xl mx-auto mt-4">
           {sectionDescription}
@@ -62,6 +62,6 @@ export default function ProfessorsPage() {
           ))
         )}
       </div>
-    </div>
+    </>
   );
 }
