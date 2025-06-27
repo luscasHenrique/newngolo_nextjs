@@ -23,7 +23,7 @@ export function ProductDetails({
   reviewCount, // Receba a prop
 }: ProductDetailsProps) {
   return (
-    <div className="p-3 flex flex-col h-full gap-3">
+    <div className="p-3 flex flex-col h-full space-y-2">
       {/* --- Bloco Superior: Título e Descrição --- */}
       <div>
         <h3 className="text-lg font-semibold mb-2">{name}</h3>{" "}
