@@ -16,7 +16,7 @@ const ProfessorFilter: React.FC<ProfessorFilterProps> = ({
   return (
     <Input // <-- Componente Input do shadcn/ui sendo usado aqui
       type="text"
-      placeholder="Pesquisar por professor, unidade, telefone, dia ou horário..."
+      placeholder="Pesquisar por professor..."
       className="w-full max-w-md p-3 border border-gray-300 rounded-lg transition duration-200"
       value={searchTerm}
       onChange={onSearchChange}
