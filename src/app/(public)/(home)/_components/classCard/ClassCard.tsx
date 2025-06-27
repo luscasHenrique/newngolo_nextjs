@@ -4,9 +4,8 @@ import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { FaPhoneAlt, FaMapMarkerAlt, FaCalendarAlt } from "react-icons/fa";
-import type { ClassInfo } from "./types/Class";
 import Link from "next/link";
-
+import { ClassInfo } from "@/app/(public)/professors/types/Class";
 interface ClassCardProps {
   classInfo: ClassInfo;
 }
@@ -81,11 +80,11 @@ const ClassCard: React.FC<ClassCardProps> = ({ classInfo }) => {
 
         {/* Botões */}
         <div className="flex gap-4 mt-auto w-full">
-          <Link href={`/professor/${classInfo.id}`} className="flex-1">
-            <Button
-              className="w-full sm:w-auto flex-1 transition-all"
-              variant="outline"
-            >
+          <Link
+            href={`/professor/${classInfo.professor.id}`}
+            className="mt-auto w-full"
+          >
+            <Button variant={"outline"} className="w-full transition-all">
               Ver Perfil
             </Button>
           </Link>

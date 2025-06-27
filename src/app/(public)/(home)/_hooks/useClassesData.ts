@@ -2,9 +2,10 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { ClassInfo } from "../_components/classCard/types/Class";
-import { mockClasses } from "../data/mockClasses";
-// Importa o tipo ClassInfo da pasta do ClassCard
+import type { ClassInfo } from "../../professors/types/Class"; // Caminho e tipo corrigidos
+
+// Importa os dados unificados
+import { allClasses } from "../../professors/data/mockProfessors"; // <-- CAMINHO E NOME AJUSTADOS
 
 export const useClassesData = () => {
   const [classes, setClasses] = useState<ClassInfo[]>([]);
@@ -17,16 +18,8 @@ export const useClassesData = () => {
         setLoading(true);
         setError(null);
 
-        // Simula uma chamada de API assíncrona
-        // Em um cenário real, você faria um fetch:
-        // const response = await fetch('/api/classes');
-        // if (!response.ok) {
-        //   throw new Error('Failed to fetch classes');
-        // }
-        // const data: ClassInfo[] = await response.json();
-
-        // Usando os dados mockados diretamente
-        const data: ClassInfo[] = mockClasses;
+        // Usando os dados unificados (allClasses) diretamente
+        const data: ClassInfo[] = allClasses; // <-- USANDO allCLASSES AQUI
 
         setClasses(data);
       } catch (err) {
