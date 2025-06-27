@@ -23,7 +23,7 @@ export function ProductDetails({
   reviewCount, // Receba a prop
 }: ProductDetailsProps) {
   return (
-    <div className="p-3 flex flex-col h-full space-y-2">
+    <div className=" flex flex-col h-full space-y-2">
       {/* --- Bloco Superior: Título e Descrição --- */}
       <div>
         <h3 className="text-lg font-semibold mb-2">{name}</h3>{" "}
@@ -37,7 +37,7 @@ export function ProductDetails({
       </div>
 
       {/* --- Bloco Inferior: Preços e Avaliação --- */}
-      <div className="mt-auto">
+      <div className="mt-auto space-y-1">
         <div className="flex flex-col items-start">
           <p className="text-xl font-bold text-blue-600">
             {toCurrency(price)}{" "}
@@ -55,7 +55,7 @@ export function ProductDetails({
         {rating !== undefined &&
           rating > 0 &&
           reviewCount !== undefined && ( // Verificar se rating e reviewCount existem e rating > 0
-            <div className="mt-1">
+            <div>
               <ProductRating rating={rating} reviewCount={reviewCount} />{" "}
               {/* PASSE A PROP reviewCount */}
             </div>

@@ -25,7 +25,7 @@ export function ProductCard({ product }: ProductCardProps) {
         />
       </Link>
 
-      <div className="flex flex-col flex-1">
+      <div className="flex flex-col flex-1 p-2 space-y-2">
         <Link href={productUrl}>
           <ProductDetails
             name={product.name}

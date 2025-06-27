@@ -12,7 +12,7 @@ interface ProductActionsProps {
 
 export function ProductActions({ productUrl }: ProductActionsProps) {
   return (
-    <div className="p-3 pt-1 flex items-center gap-2">
+    <div className="flex items-center gap-2">
       <Button asChild className="flex-1" size="sm">
         <Link href={productUrl}>Comprar</Link>
       </Button>
