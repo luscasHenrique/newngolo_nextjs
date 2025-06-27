@@ -83,13 +83,16 @@ const ClassCard: React.FC<ClassCardProps> = ({ classInfo }) => {
         <div className="flex gap-4 mt-auto w-full">
           <Link href={`/professor/${classInfo.id}`} className="flex-1">
             <Button
-              className="w-full sm:w-auto flex-1 py-2 border border-gray-800 text-gray-800 bg-transparent hover:bg-gray-800 hover:text-white transition-all"
+              className="w-full sm:w-auto flex-1 transition-all"
               variant="outline"
             >
               Ver Perfil
             </Button>
           </Link>
-          <Button className="w-full sm:w-auto flex-1 py-2 bg-blue-600 text-white hover:bg-blue-700 transition-all">
+          <Button
+            variant={"ghost"}
+            className="w-full sm:w-auto flex-1  transition-all"
+          >
             Contatar
           </Button>
         </div>
